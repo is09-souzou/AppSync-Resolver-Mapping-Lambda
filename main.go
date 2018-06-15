@@ -1,30 +1,25 @@
-// https://github.com/sbstjn/go-appsync-graphql-cloudformation/blob/master/main.go
 package main
 
 import (
-  "log"
-	"time"
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handle"
+	"encoding/json"
 )
 
-type Post struct {
-	URL   string    `json:"url"`
-	Title string    `json:"title"`
-	Date  time.Time `json:"date"`
+type payload struct {
+	Field     string `json:"field"`
+	Arguments json.RawMessage `json:"arguments"`
 }
 
-func handleRequest(req events.APIGatewayProxyRequest) (interface{}, error) {
-
-  // list := []Post{}
-  
-  // list = append(list, Post{"test", "test2", "test3"})
-  // list = append(list, Post{"test", "test2", "test3"})
-  log.Print(req)
-
-	return nil, nil
+func router(payload payload) {
+	switch payload.Field {
+		case "deleteUser":
+			var p handle.DeleteUser
+			json.Unmarshal(payload.Arguments, &p)
+			handle.HandleRequest(p)
+	}
 }
 
 func main() {
-	lambda.Start(handleRequest)
+	lambda.Start(router)
 }
