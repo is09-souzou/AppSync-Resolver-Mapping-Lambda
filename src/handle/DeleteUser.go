@@ -50,7 +50,7 @@ func HandleRequest(arg DeleteUser) (interface{}, error) {
 				N: aws.String(arg.ID),
 			},
 		},
-		TableName: aws.String("WorksTable"),
+		TableName: aws.String("UsersTable"),
 	}
 	
 	_, err = svc.DeleteItem(input)
