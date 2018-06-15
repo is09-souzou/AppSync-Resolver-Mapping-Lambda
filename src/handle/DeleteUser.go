@@ -1,8 +1,11 @@
 package handle
 
 import (
-	"log"
+	"fmt"
 	"encoding/json"
+    "github.com/aws/aws-sdk-go/aws"
+    "github.com/aws/aws-sdk-go/aws/session"
+    "github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
 type request struct {
@@ -22,21 +25,43 @@ type User struct {
 	Name  string `json:"name"`
 }
 
-func printID(arg DeleteUser) {
-	log.Printf("print ID %+v\n", arg.ID)
-}
 
 // HandleRequest Delete User Handle
 func HandleRequest(arg DeleteUser) (interface{}, error) {
 
-	list := []User{}
+	// list := []User{}
 
-	list = append(list, User{"id1", "email1", "name1"})
-	list = append(list, User{"id2", "email2", "name2"})
+	// list = append(list, User{"id1", "email1", "name1"})
+	// list = append(list, User{"id2", "email2", "name2"})
+	// log.Printf("list %+v\n", list)
 
-	printID(arg)
+    session, err := session.NewSession(
+		&aws.Config{Region: aws.String("ap-northeast-1")},
+	)
+    if err != nil {
+        panic(err)
+	}
+	
+	svc := dynamodb.New(session)
 
-	log.Printf("list %+v\n", list)
-
-	return User{arg.ID, "email2", "name2"}, nil
+	input := &dynamodb.DeleteItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				N: aws.String(arg.ID),
+			},
+		},
+		TableName: aws.String("WorksTable"),
+	}
+	
+	_, err = svc.DeleteItem(input)
+	
+	if err != nil {
+		fmt.Println("Got error calling DeleteItem")
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	
+	fmt.Println("Deleted 'The Big New Movie' (2015)")
+	
+	return true, nil
 }
