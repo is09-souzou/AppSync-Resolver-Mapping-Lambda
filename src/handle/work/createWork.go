@@ -1,4 +1,4 @@
-package handle
+package work
 
 import (
 	"fmt"
@@ -13,21 +13,8 @@ type DeleteUser struct {
 	ID string `json:"id"`
 }
 
-// User type
-type User struct {
-	ID    string `json:"id"`
-	Email string `json:"email"`
-	Name  string `json:"name"`
-}
-
-// HandleRequest Delete User Handle
-func deleteUserHandle(arg DeleteUser) (interface{}, error) {
-
-	// list := []User{}
-
-	// list = append(list, User{"id1", "email1", "name1"})
-	// list = append(list, User{"id2", "email2", "name2"})
-	// log.Printf("list %+v\n", list)
+// CreateWork Delete User Handle
+func CreateWork(arg DeleteUser) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},
@@ -44,7 +31,7 @@ func deleteUserHandle(arg DeleteUser) (interface{}, error) {
 				S: aws.String(arg.ID),
 			},
 		},
-		TableName: aws.String("portal-users"),
+		TableName: aws.String("portal-works"),
 	}
 
 	_, err = svc.DeleteItem(input)
@@ -54,8 +41,6 @@ func deleteUserHandle(arg DeleteUser) (interface{}, error) {
 		fmt.Println(err.Error())
 		return nil, err
 	}
-
-	fmt.Println("Deleted")
 
 	return arg, nil
 }
