@@ -1,4 +1,4 @@
-package handle
+package work
 
 import (
 	"fmt"
@@ -13,15 +13,8 @@ type UpdateWork struct {
 	ID string `json:"id"`
 }
 
-// Work type
-type Work struct {
-	ID    string `json:"id"`
-	Email string `json:"email"`
-	Name  string `json:"name"`
-}
-
-// WorkUpdateHandle Update Work Handle
-func updateWorkHandle(arg UpdateWork) (interface{}, error) {
+// UpdateWorkHandle Update Work Handle
+func UpdateWorkHandle(arg UpdateWork) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},
