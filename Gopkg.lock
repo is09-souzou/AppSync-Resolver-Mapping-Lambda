@@ -56,8 +56,8 @@
 [[projects]]
   branch = "master"
   name = "github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda"
-  packages = ["src/handle"]
-  revision = "90ee253b1c6423fbd21eed01698a0436501f48f3"
+  packages = ["src/handle/user"]
+  revision = "2719254d33ddac01035dca8da688ea8576c72fb9"
 
 [[projects]]
   name = "github.com/jmespath/go-jmespath"
@@ -67,6 +67,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "1dad762d944298b29e81cd1ba1ec4b120bd25dd81cc3414ecd3563acccf26eda"
+  inputs-digest = "5eb4f1b84b89f1ab427378213e79133dc8de14956f927e2930270c46821438ce"
   solver-name = "gps-cdcl"
   solver-version = 1
