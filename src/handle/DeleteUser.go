@@ -2,16 +2,10 @@ package handle
 
 import (
 	"fmt"
-	"encoding/json"
     "github.com/aws/aws-sdk-go/aws"
     "github.com/aws/aws-sdk-go/aws/session"
     "github.com/aws/aws-sdk-go/service/dynamodb"
 )
-
-type request struct {
-	Field     string `json:"field"`
-	Arguments json.RawMessage `json:"arguments"`
-}
 
 // DeleteUser type
 type DeleteUser struct {
@@ -24,7 +18,6 @@ type User struct {
 	Email string `json:"email"`
 	Name  string `json:"name"`
 }
-
 
 // HandleRequest Delete User Handle
 func HandleRequest(arg DeleteUser) (interface{}, error) {
@@ -47,7 +40,7 @@ func HandleRequest(arg DeleteUser) (interface{}, error) {
 	input := &dynamodb.DeleteItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
-				N: aws.String(arg.ID),
+				S: aws.String(arg.ID),
 			},
 		},
 		TableName: aws.String("UsersTable"),
