@@ -61,7 +61,7 @@ func HandleRequest(arg DeleteUser) (interface{}, error) {
 		return nil, err
 	}
 	
-	fmt.Println("Deleted 'The Big New Movie' (2015)")
+	fmt.Println("Deleted")
 	
 	return true, nil
 }
