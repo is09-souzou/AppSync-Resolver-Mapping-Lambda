@@ -17,7 +17,7 @@ func router(payload payload) (interface{}, error) {
 		case "deleteUser":
 			var p handle.DeleteUser
 			json.Unmarshal(payload.Arguments, &p)
-			return handle.HandleRequest(p)
+			return handle.deleteUserHandle(p)
 	}
 	return nil, errors.New("field is not found")
 }

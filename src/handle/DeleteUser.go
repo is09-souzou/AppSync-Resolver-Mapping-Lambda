@@ -2,9 +2,10 @@ package handle
 
 import (
 	"fmt"
-    "github.com/aws/aws-sdk-go/aws"
-    "github.com/aws/aws-sdk-go/aws/session"
-    "github.com/aws/aws-sdk-go/service/dynamodb"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
 // DeleteUser type
@@ -20,7 +21,7 @@ type User struct {
 }
 
 // HandleRequest Delete User Handle
-func HandleRequest(arg DeleteUser) (interface{}, error) {
+func deleteUserHandle(arg DeleteUser) (interface{}, error) {
 
 	// list := []User{}
 
@@ -28,13 +29,13 @@ func HandleRequest(arg DeleteUser) (interface{}, error) {
 	// list = append(list, User{"id2", "email2", "name2"})
 	// log.Printf("list %+v\n", list)
 
-    session, err := session.NewSession(
+	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},
 	)
-    if err != nil {
-        panic(err)
+	if err != nil {
+		panic(err)
 	}
-	
+
 	svc := dynamodb.New(session)
 
 	input := &dynamodb.DeleteItemInput{
@@ -45,16 +46,16 @@ func HandleRequest(arg DeleteUser) (interface{}, error) {
 		},
 		TableName: aws.String("portal-users"),
 	}
-	
+
 	_, err = svc.DeleteItem(input)
-	
+
 	if err != nil {
 		fmt.Println("Got error calling DeleteItem")
 		fmt.Println(err.Error())
 		return nil, err
 	}
-	
+
 	fmt.Println("Deleted")
-	
+
 	return arg, nil
 }
