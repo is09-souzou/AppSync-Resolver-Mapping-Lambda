@@ -56,5 +56,5 @@ func HandleRequest(arg DeleteUser) (interface{}, error) {
 	
 	fmt.Println("Deleted")
 	
-	return true, nil
+	return arg, nil
 }
