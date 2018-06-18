@@ -24,6 +24,10 @@ func router(payload payload) (interface{}, error) {
 		var p work.CreateWork
 		json.Unmarshal(payload.Arguments, &p)
 		return work.CreateWorkHandle(p)
+	case "updateWork":
+		var p work.UpdateWork
+		json.Unmarshal(payload.Arguments, &p)
+		return work.UpdateWorkHandle(p)
 	}
 	return nil, errors.New("field is not found")
 }
