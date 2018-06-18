@@ -1,6 +1,7 @@
 package work
 
 import (
+	"time"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -41,6 +42,8 @@ func CreateWorkHandle(arg CreateWork) (interface{}, error) {
 	}
 
 	arg.ID = id.String()
+	arg.CreatedAt = int(time.Now().Unix())
+	fmt.Printf("print ID %+v\n", arg.ID)
 
 	work, err := dynamodbattribute.MarshalMap(arg)
 
