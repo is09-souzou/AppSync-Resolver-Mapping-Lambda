@@ -49,7 +49,5 @@ func UpdateWorkHandle(arg UpdateWork) (interface{}, error) {
 		return nil, err
 	}
 
-	fmt.Println("update 'The Big New Movie' (2015)")
-
 	return true, nil
 }

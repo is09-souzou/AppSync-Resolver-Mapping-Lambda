@@ -6,6 +6,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handle/user"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handle/work"
 )
 
 type payload struct {
@@ -19,6 +20,10 @@ func router(payload payload) (interface{}, error) {
 		var p user.DeleteUser
 		json.Unmarshal(payload.Arguments, &p)
 		return user.DeleteUserHandle(p)
+	case "createWork":
+		var p work.CreateWork
+		json.Unmarshal(payload.Arguments, &p)
+		return work.CreateWorkHandle(p)
 	}
 	return nil, errors.New("field is not found")
 }

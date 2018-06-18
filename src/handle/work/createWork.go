@@ -6,38 +6,59 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/google/uuid"
 )
 
-// DeleteUser type
-type DeleteUser struct {
-	ID string `json:"id"`
+// CreateWork type
+type CreateWork struct {
+	ID          string   `json:"id"`
+	UserID      string   `json:"userId"`
+	Tags        []string `json:"tags"`
+	CreatedAt   int      `json:"createdAt"`
+	Title       string   `json:"title"`
+	ImageURI    string   `json:"imageUri"`
+	Description string   `json:"description"`
 }
 
-// CreateWork Delete User Handle
-func CreateWork(arg DeleteUser) (interface{}, error) {
+// CreateWorkHandle Create Work Handle
+func CreateWorkHandle(arg CreateWork) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},
 	)
+
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	svc := dynamodb.New(session)
 
-	input := &dynamodb.DeleteItemInput{
-		Key: map[string]*dynamodb.AttributeValue{
-			"id": {
-				S: aws.String(arg.ID),
-			},
-		},
+	id, err := uuid.NewUUID()
+
+	if err != nil {
+		return nil, err
+	}
+
+	arg.ID = id.String()
+
+	work, err := dynamodbattribute.MarshalMap(arg)
+
+	if err != nil {
+		fmt.Println("Got error marshalling map:")
+		fmt.Println(err.Error())
+		return nil, err
+	}
+
+	input := &dynamodb.PutItemInput{
+		Item:      work,
 		TableName: aws.String("portal-works"),
 	}
 
-	_, err = svc.DeleteItem(input)
+	_, err = svc.PutItem(input)
 
 	if err != nil {
-		fmt.Println("Got error calling DeleteItem")
+		fmt.Println("Got error calling PutItem:")
 		fmt.Println(err.Error())
 		return nil, err
 	}

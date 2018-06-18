@@ -20,7 +20,7 @@ func DeleteUserHandle(arg DeleteUser) (interface{}, error) {
 		&aws.Config{Region: aws.String("ap-northeast-1")},
 	)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	svc := dynamodb.New(session)
