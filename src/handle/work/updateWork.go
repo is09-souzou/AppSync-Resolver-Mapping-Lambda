@@ -26,12 +26,19 @@ func UpdateWorkHandle(arg UpdateWork) (interface{}, error) {
 	svc := dynamodb.New(session)
 
 	input := &dynamodb.UpdateItemInput{
-		Key: map[string]*dynamodb.AttributeValue{
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
 			"id": {
 				S: aws.String(arg.ID),
 			},
 		},
 		TableName: aws.String("portal-works"),
+		Key: map[string]*dynamodb.AttributeValue{
+			"userId": {
+				S: aws.String(arg.ID),
+			},
+		},
+		ReturnValues:     aws.String("UPDATED_NEW"),
+		UpdateExpression: aws.String("set info.rating = :r"),
 	}
 
 	_, err = svc.UpdateItem(input)
