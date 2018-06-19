@@ -2,7 +2,6 @@ package model
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
@@ -16,15 +15,11 @@ type Work struct {
 // GetWorkByID Get work by ID from DynamoDB
 func GetWorkByID(id string) (Work, error) {
 
-	session, err := session.NewSession(
-		&aws.Config{Region: aws.String("ap-northeast-1")},
-	)
+	svc, err := getSVC()
 
 	if err != nil {
 		return Work{}, err
 	}
-
-	svc := dynamodb.New(session)
 
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String("portal-works"),
@@ -53,15 +48,11 @@ func GetWorkByID(id string) (Work, error) {
 // GetWorkList Get work list By ID from DynamoDB
 func GetWorkList() ([]Work, error) {
 
-	session, err := session.NewSession(
-		&aws.Config{Region: aws.String("ap-northeast-1")},
-	)
+	svc, err := getSVC()
 
 	if err != nil {
 		return []Work{}, err
 	}
-
-	svc := dynamodb.New(session)
 
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String("portal-works"),
@@ -77,4 +68,3 @@ func GetWorkList() ([]Work, error) {
 
 	return item, nil
 }
-

@@ -14,7 +14,7 @@ type DeleteUser struct {
 }
 
 // DeleteUserHandle Delete User Handle
-func DeleteUserHandle(arg DeleteUser) (interface{}, error) {
+func DeleteUserHandle(arg DeleteUser, sub string) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},

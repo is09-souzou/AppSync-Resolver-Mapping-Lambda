@@ -2,10 +2,10 @@ package model
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
+const UserTableName = "portal-users"
 
 type User struct {
 	ID    string `json:"id"`
@@ -16,18 +16,14 @@ type User struct {
 // GetUserByID Get user by ID from DynamoDB
 func GetUserByID(id string) (User, error) {
 
-	session, err := session.NewSession(
-		&aws.Config{Region: aws.String("ap-northeast-1")},
-	)
+	svc, err := getSVC()
 
 	if err != nil {
 		return User{}, err
 	}
 
-	svc := dynamodb.New(session)
-
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String("portal-users"),
+		TableName: aws.String(UserTableName),
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
 				S: aws.String(id),
@@ -53,18 +49,14 @@ func GetUserByID(id string) (User, error) {
 // GetUserList Get user list By ID from DynamoDB
 func GetUserList() ([]User, error) {
 
-	session, err := session.NewSession(
-		&aws.Config{Region: aws.String("ap-northeast-1")},
-	)
+	svc, err := getSVC()
 
 	if err != nil {
 		return []User{}, err
 	}
 
-	svc := dynamodb.New(session)
-
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String("portal-users"),
+		TableName: aws.String(UserTableName),
 	})
 
 	item := []User{}
@@ -77,3 +69,49 @@ func GetUserList() ([]User, error) {
 
 	return item, nil
 }
+
+// UpdateUserById Update user list By ID to DynamoDB
+func UpdateUserById(
+	id    *string,
+	email *string,
+	name  *string,
+) error {
+
+	svc, err := getSVC()
+
+	if err != nil {
+		return err
+	}
+
+	// var key map[string]
+
+	// if (id != nil) {
+		
+	// }
+
+	input := &dynamodb.UpdateItemInput{
+		TableName: aws.String(UserTableName),
+		Key: map[string]*dynamodb.AttributeValue{
+			"year": {
+				N: aws.String("2015"),
+			},
+			"title": {
+				S: aws.String("The Big New Movie"),
+			},
+		},
+	}
+
+	_, err = svc.UpdateItem(input)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// func test() {
+// 	s := "Hello, World"   
+// 	a := &s
+// 	UpdateUserById(a, nil, nil)
+// }

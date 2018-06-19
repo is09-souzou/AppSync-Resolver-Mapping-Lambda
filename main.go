@@ -12,6 +12,7 @@ import (
 type payload struct {
 	Field     string          `json:"field"`
 	Arguments json.RawMessage `json:"arguments"`
+	Sub       string          `json:"sub"`
 }
 
 func router(payload payload) (interface{}, error) {
