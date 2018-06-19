@@ -17,18 +17,22 @@ type payload struct {
 
 func router(payload payload) (interface{}, error) {
 	switch payload.Field {
+	case "createUser":
+		var p user.CreateUser
+		json.Unmarshal(payload.Arguments, &p)
+		return user.CreateUserHandle(p, payload.Sub)
 	case "deleteUser":
 		var p user.DeleteUser
 		json.Unmarshal(payload.Arguments, &p)
-		return user.DeleteUserHandle(p)
+		return user.DeleteUserHandle(p, payload.Sub)
 	case "createWork":
 		var p work.CreateWork
 		json.Unmarshal(payload.Arguments, &p)
-		return work.CreateWorkHandle(p)
+		return work.CreateWorkHandle(p, payload.Sub)
 	case "updateWork":
 		var p work.UpdateWork
 		json.Unmarshal(payload.Arguments, &p)
-		return work.UpdateWorkHandle(p)
+		return work.UpdateWorkHandle(p, payload.Sub)
 	}
 	return nil, errors.New("field is not found")
 }

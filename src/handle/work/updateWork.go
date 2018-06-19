@@ -14,7 +14,7 @@ type UpdateWork struct {
 }
 
 // UpdateWorkHandle Update Work Handle
-func UpdateWorkHandle(arg UpdateWork) (interface{}, error) {
+func UpdateWorkHandle(arg UpdateWork, sub string) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},

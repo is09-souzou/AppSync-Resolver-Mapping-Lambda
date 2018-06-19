@@ -6,15 +6,16 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
-//Createuser type
-type createUser struct {
-	User User `json:"user"`
+//CreateUser type
+type CreateUser struct {
+	User User `json:"User"`
 }
 
 // CreateUserHandle Create User Handle
-func createUserHandle(arg createUser) (interface{}, error) {
+func CreateUserHandle(arg CreateUser, sub string) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},
@@ -26,19 +27,19 @@ func createUserHandle(arg createUser) (interface{}, error) {
 
 	svc := dynamodb.New(session)
 
-	arg.user.id = ""
+	arg.User.ID = sub
 	fmt.Println("print ID %+v\n", arg.User)
 
-	usr, err := dynamodbAttribute.MarshalMap(arg.User)
+	user, err := dynamodbattribute.MarshalMap(arg.User)
 	if err != nil {
 		fmt.Println("Got error marshalling map:")
 		fmt.Println(err.Error())
 		return nil, err
 	}
 
-	imput := &dynamodb.PutItemInput{
+	input := &dynamodb.PutItemInput{
 		Item:      user,
-		TableName: aws.String("portal-users"),
+		TableName: aws.String("portal-Users"),
 	}
 
 	_, err = svc.PutItem(input)
@@ -49,5 +50,5 @@ func createUserHandle(arg createUser) (interface{}, error) {
 		return nil, err
 	}
 
-	return arg.user, nil
+	return arg.User, nil
 }

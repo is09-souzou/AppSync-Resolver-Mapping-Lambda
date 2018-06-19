@@ -17,7 +17,7 @@ type CreateWork struct {
 }
 
 // CreateWorkHandle Create Work Handle
-func CreateWorkHandle(arg CreateWork) (interface{}, error) {
+func CreateWorkHandle(arg CreateWork, sub string) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},

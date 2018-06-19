@@ -5,7 +5,7 @@ type User struct {
 	ID        string `json:"id"`
 	Email     string `json:"email"`
 	Name      string `json:"name"`
-	Career    string
-	avatarUri String
-	Message   String
+	Career    string `json:"career"`
+	AvatarURI string `json:"avatarUri"`
+	Message   string `json:"message"`
 }
