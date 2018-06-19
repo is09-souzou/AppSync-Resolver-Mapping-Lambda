@@ -1,12 +1,12 @@
 package work
 
-// User type
+// Work type
 type Work struct {
 	ID          string   `json:"id"`
 	UserID      string   `json:"userId"`
-	Tags        []string `json:"tags`
+	Tags        []string `json:"tags"`
 	CreatedAt   int      `json:"createdAt"`
 	Title       string   `json:"title"`
-	ImageUri    string   `json:"imageUri"`
+	ImageURI    string   `json:"imageUri"`
 	Description string   `json:"description"`
 }

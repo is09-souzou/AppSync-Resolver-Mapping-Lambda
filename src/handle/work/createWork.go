@@ -13,13 +13,7 @@ import (
 
 // CreateWork type
 type CreateWork struct {
-	ID          string   `json:"id"`
-	UserID      string   `json:"userId"`
-	Tags        []string `json:"tags"`
-	CreatedAt   int      `json:"createdAt"`
-	Title       string   `json:"title"`
-	ImageURI    string   `json:"imageUri"`
-	Description string   `json:"description"`
+	Work Work  `json:"work"`
 }
 
 // CreateWorkHandle Create Work Handle
@@ -41,11 +35,11 @@ func CreateWorkHandle(arg CreateWork) (interface{}, error) {
 		return nil, err
 	}
 
-	arg.ID = id.String()
-	arg.CreatedAt = int(time.Now().Unix())
-	fmt.Printf("print ID %+v\n", arg.ID)
+	arg.Work.ID = id.String()
+	arg.Work.CreatedAt = int(time.Now().Unix())
+	fmt.Printf("print ID %+v\n", arg.Work)
 
-	work, err := dynamodbattribute.MarshalMap(arg)
+	work, err := dynamodbattribute.MarshalMap(arg.Work)
 
 	if err != nil {
 		fmt.Println("Got error marshalling map:")
