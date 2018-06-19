@@ -60,5 +60,5 @@ func CreateWorkHandle(arg CreateWork) (interface{}, error) {
 		return nil, err
 	}
 
-	return arg, nil
+	return arg.Work, nil
 }
