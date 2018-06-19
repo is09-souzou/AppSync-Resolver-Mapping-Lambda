@@ -2,7 +2,10 @@ package user
 
 // User type
 type User struct {
-	ID    string `json:"id"`
-	Email string `json:"email"`
-	Name  string `json:"name"`
+	ID        string `json:"id"`
+	Email     string `json:"email"`
+	Name      string `json:"name"`
+	Career    string
+	avatarUri String
+	Message   String
 }
