@@ -2,13 +2,16 @@ package model
 
 import (
 	"errors"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
+// UserTableName DynamoDB User Table Name
 const UserTableName = "portal-users"
 
+// User DynamoDB User Struct
 type User struct {
 	ID    string `json:"id"`
 	Email string `json:"email"`
@@ -72,8 +75,8 @@ func GetUserList() ([]User, error) {
 	return item, nil
 }
 
-// UpdateUserById Update user list By ID to DynamoDB
-func UpdateUserById(
+// UpdateUserByID Update user By ID to DynamoDB
+func UpdateUserByID(
 	id *string,
 	email *string,
 	name *string,
@@ -85,22 +88,21 @@ func UpdateUserById(
 		return err
 	}
 
-	if (id == nil && email == nil && name == nil) {
+	if id == nil && email == nil && name == nil {
 		return errors.New("required new value")
 	}
 
-
 	var key = map[string]*dynamodb.AttributeValue{}
 
-	if (id != nil) {
+	if id != nil {
 		key["id"].S = aws.String(*id)
 	}
 
-	if (email != nil) {
+	if email != nil {
 		key["email"].S = aws.String(*email)
 	}
 
-	if (name != nil) {
+	if name != nil {
 		key["name"].S = aws.String(*name)
 	}
 

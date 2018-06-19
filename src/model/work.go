@@ -1,15 +1,26 @@
 package model
 
 import (
+	"errors"
+	"strconv"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
+// WorkTableName DynamoDB Work Table Name
+const WorkTableName = "portal-works"
+
+// Work DynamoDB Work Struct
 type Work struct {
-	ID    string `json:"id"`
-	Email string `json:"email"`
-	Name  string `json:"name"`
+	ID          string
+	UserID      string
+	Title       string
+	Tag         []string
+	ImageURI    string
+	Description string
+	CreatedAt   int
 }
 
 // GetWorkByID Get work by ID from DynamoDB
@@ -22,7 +33,7 @@ func GetWorkByID(id string) (Work, error) {
 	}
 
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String("portal-works"),
+		TableName: aws.String(WorkTableName),
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
 				S: aws.String(id),
@@ -55,7 +66,7 @@ func GetWorkList() ([]Work, error) {
 	}
 
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String("portal-works"),
+		TableName: aws.String(WorkTableName),
 	})
 
 	item := []Work{}
@@ -67,4 +78,71 @@ func GetWorkList() ([]Work, error) {
 	}
 
 	return item, nil
+}
+
+// UpdateWorkByID Update work By ID to DynamoDB
+func UpdateWorkByID(
+	id *string,
+	userID *string,
+	title *string,
+	tag *[]string,
+	imageURI *string,
+	description *string,
+	createdAt *int,
+) error {
+
+	svc, err := getSVC()
+
+	if err != nil {
+		return err
+	}
+
+	if id == nil && userID == nil && title == nil && tag == nil && imageURI == nil && description == nil && createdAt == nil {
+		return errors.New("required new value")
+	}
+
+	var key = map[string]*dynamodb.AttributeValue{}
+
+	if id != nil {
+		key["id"].S = aws.String(*id)
+	}
+
+	if userID != nil {
+		key["userId"].S = aws.String(*userID)
+	}
+
+	if title != nil {
+		key["title"].S = aws.String(*title)
+	}
+
+	if tag != nil {
+		key["tag"].SS = aws.StringSlice(*tag)
+	}
+
+	if imageURI != nil {
+		key["imageUri"].S = aws.String(*imageURI)
+	}
+
+	if description != nil {
+		key["description"].S = aws.String(*description)
+	}
+
+	if createdAt != nil {
+		key["imageURI"].N = aws.String(strconv.Itoa(*createdAt))
+	}
+
+	input := &dynamodb.UpdateItemInput{
+		TableName:        aws.String(WorkTableName),
+		Key:              key,
+		ReturnValues:     aws.String("UPDATED_NEW"),
+		UpdateExpression: aws.String(""),
+	}
+
+	_, err = svc.UpdateItem(input)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
