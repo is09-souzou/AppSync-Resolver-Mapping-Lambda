@@ -28,7 +28,7 @@ func CreateUserHandle(arg CreateUser, sub string) (interface{}, error) {
 	svc := dynamodb.New(session)
 
 	arg.User.ID = sub
-	fmt.Println("print ID %+v\n", arg.User)
+	fmt.Printf("print ID %+v\n", arg.User)
 
 	user, err := dynamodbattribute.MarshalMap(arg.User)
 	if err != nil {
