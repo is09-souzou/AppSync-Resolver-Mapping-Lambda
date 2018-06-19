@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/google/uuid"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handle/user"
 )
 
 // CreateWork type
@@ -28,6 +29,23 @@ func CreateWorkHandle(arg CreateWork) (interface{}, error) {
 	}
 
 	svc := dynamodb.New(session)
+
+	result, err := svc.GetItem(&dynamodb.GetItemInput{
+		TableName: aws.String("portal-users"),
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(arg.Work.UserID),
+			},
+		},
+	})
+
+	user := user.User{}
+	
+	err = dynamodbattribute.UnmarshalMap(result.Item, &user)
+
+	if err != nil {
+		return nil, err
+	}
 
 	id, err := uuid.NewUUID()
 
