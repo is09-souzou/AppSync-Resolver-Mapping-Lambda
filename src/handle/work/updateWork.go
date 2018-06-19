@@ -28,25 +28,25 @@ func UpdateWorkHandle(arg UpdateWork) (interface{}, error) {
 	input := &dynamodb.UpdateItemInput{
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
 			"id": {
-				S: aws.String(""),
+				S: aws.String(arg.Work.ID),
 			},
 			"userId": {
-				S: aws.String("hashiserver@gmail.com"),
+				S: aws.String(arg.Work.UserID),
 			},
 		},
 		TableName: aws.String("portal-works"),
 		Key: map[string]*dynamodb.AttributeValue{
 			"title": {
-				S: aws.String("test"),
+				S: aws.String(arg.Work.Title),
 			},
 			"tags": {
 				SS: aws.StringSlice(arg.Work.Tags),
 			},
 			"imageUri": {
-				S: aws.String("https://create"),
+				S: aws.String(arg.Work.ImageURI),
 			},
 			"description": {
-				S: aws.String("testCode"),
+				S: aws.String(arg.Work.Description),
 			},
 		},
 		ReturnValues:     aws.String("UPDATED_NEW"),
