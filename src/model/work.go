@@ -101,39 +101,40 @@ func UpdateWorkByID(
 		return errors.New("required new value")
 	}
 
-	var key = map[string]*dynamodb.AttributeValue{}
-
-	if id != nil {
-		key["id"].S = aws.String(*id)
-	}
+	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
 
 	if userID != nil {
-		key["userId"].S = aws.String(*userID)
+		expressionAttributeValues["userId"].S = aws.String(*userID)
 	}
 
 	if title != nil {
-		key["title"].S = aws.String(*title)
+		expressionAttributeValues["title"].S = aws.String(*title)
 	}
 
 	if tag != nil {
-		key["tag"].SS = aws.StringSlice(*tag)
+		expressionAttributeValues["tag"].SS = aws.StringSlice(*tag)
 	}
 
 	if imageURI != nil {
-		key["imageUri"].S = aws.String(*imageURI)
+		expressionAttributeValues["imageUri"].S = aws.String(*imageURI)
 	}
 
 	if description != nil {
-		key["description"].S = aws.String(*description)
+		expressionAttributeValues["description"].S = aws.String(*description)
 	}
 
 	if createdAt != nil {
-		key["imageURI"].N = aws.String(strconv.Itoa(*createdAt))
+		expressionAttributeValues["createdAt"].N = aws.String(strconv.Itoa(*createdAt))
 	}
 
 	input := &dynamodb.UpdateItemInput{
-		TableName:        aws.String(WorkTableName),
-		Key:              key,
+		TableName:                 aws.String(WorkTableName),
+		ExpressionAttributeValues: expressionAttributeValues,
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(*id),
+			},
+		},
 		ReturnValues:     aws.String("UPDATED_NEW"),
 		UpdateExpression: aws.String(""),
 	}

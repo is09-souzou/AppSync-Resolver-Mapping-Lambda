@@ -18,6 +18,47 @@ type User struct {
 	Name  string `json:"name"`
 }
 
+// CreateUser Get user list By ID from DynamoDB
+func CreateUser(
+	id *string,
+	email *string,
+	name *string,
+) error {
+
+	svc, err := getSVC()
+
+	if err != nil {
+		return err
+	}
+
+	var item = map[string]*dynamodb.AttributeValue{}
+
+	if id != nil {
+		item["id"].S = aws.String(*id)
+	}
+
+	if email != nil {
+		item["email"].S = aws.String(*email)
+	}
+
+	if name != nil {
+		item["name"].S = aws.String(*name)
+	}
+
+	input := &dynamodb.PutItemInput{
+		Item:      item,
+		TableName: aws.String("Movies"),
+	}
+
+	_, err = svc.PutItem(input)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // GetUserByID Get user by ID from DynamoDB
 func GetUserByID(id string) (User, error) {
 
@@ -92,23 +133,24 @@ func UpdateUserByID(
 		return errors.New("required new value")
 	}
 
-	var key = map[string]*dynamodb.AttributeValue{}
-
-	if id != nil {
-		key["id"].S = aws.String(*id)
-	}
+	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
 
 	if email != nil {
-		key["email"].S = aws.String(*email)
+		expressionAttributeValues["email"].S = aws.String(*email)
 	}
 
 	if name != nil {
-		key["name"].S = aws.String(*name)
+		expressionAttributeValues["name"].S = aws.String(*name)
 	}
 
 	input := &dynamodb.UpdateItemInput{
-		TableName:        aws.String(UserTableName),
-		Key:              key,
+		TableName:                 aws.String(UserTableName),
+		ExpressionAttributeValues: expressionAttributeValues,
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(*id),
+			},
+		},
 		ReturnValues:     aws.String("UPDATED_NEW"),
 		UpdateExpression: aws.String(""),
 	}
