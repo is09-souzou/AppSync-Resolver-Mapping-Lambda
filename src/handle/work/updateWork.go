@@ -10,7 +10,7 @@ import (
 
 // UpdateWork type
 type UpdateWork struct {
-	Work Work `json:"word"`
+	Work Work `json:"work"`
 }
 
 // UpdateWorkHandle Update Work Handle
