@@ -3,6 +3,8 @@ package user
 import (
 	"fmt"
 
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -14,7 +16,7 @@ type DeleteUser struct {
 }
 
 // DeleteUserHandle Delete User Handle
-func DeleteUserHandle(arg DeleteUser, sub string) (interface{}, error) {
+func DeleteUserHandle(arg DeleteUser, identity define.Identity) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -17,7 +19,7 @@ type CreateWork struct {
 }
 
 // CreateWorkHandle Create Work Handle
-func CreateWorkHandle(arg CreateWork, sub string) (interface{}, error) {
+func CreateWorkHandle(arg CreateWork, identity define.Identity) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},

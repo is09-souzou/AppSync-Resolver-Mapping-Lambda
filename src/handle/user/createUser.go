@@ -7,6 +7,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
 )
 
 //CreateUser type
@@ -15,7 +17,7 @@ type CreateUser struct {
 }
 
 // CreateUserHandle Create User Handle
-func CreateUserHandle(arg CreateUser, sub string) (interface{}, error) {
+func CreateUserHandle(arg CreateUser, identity define.Identity) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},
@@ -27,7 +29,7 @@ func CreateUserHandle(arg CreateUser, sub string) (interface{}, error) {
 
 	svc := dynamodb.New(session)
 
-	arg.User.ID = sub
+	arg.User.ID = identity.Sub
 	fmt.Printf("print ID %+v\n", arg.User)
 
 	user, err := dynamodbattribute.MarshalMap(arg.User)
