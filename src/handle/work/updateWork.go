@@ -2,12 +2,10 @@ package work
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
 )
 
 // UpdateWork type
@@ -18,47 +16,16 @@ type UpdateWork struct {
 // UpdateWorkHandle Update Work Handle
 func UpdateWorkHandle(arg UpdateWork, identity define.Identity) (interface{}, error) {
 
-	session, err := session.NewSession(
-		&aws.Config{Region: aws.String("ap-northeast-1")},
+	arg.Work.CreatedAt = int(time.Now().Unix())
+
+	err := model.UpdateWorkByID(
+		&arg.Work.ID,
+		&arg.Work.UserID,
+		&arg.Work.Title,
+		&arg.Work.Tags,
+		&arg.Work.ImageURI,
+		&arg.Work.Description,
 	)
-	if err != nil {
-		return nil, err
-	}
-
-	svc := dynamodb.New(session)
-
-	input := &dynamodb.UpdateItemInput{
-		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
-			"id": {
-				S: aws.String(arg.Work.ID),
-			},
-			"userId": {
-				S: aws.String(arg.Work.UserID),
-			},
-		},
-		TableName: aws.String("portal-works"),
-		Key: map[string]*dynamodb.AttributeValue{
-			"title": {
-				S: aws.String(arg.Work.Title),
-			},
-			"tags": {
-				SS: aws.StringSlice(arg.Work.Tags),
-			},
-			"imageUri": {
-				S: aws.String(arg.Work.ImageURI),
-			},
-			"description": {
-				S: aws.String(arg.Work.Description),
-			},
-			"createdAt": {
-				S: aws.String("1529316111"),
-			},
-		},
-		ReturnValues:     aws.String("UPDATED_NEW"),
-		UpdateExpression: aws.String(""),
-	}
-
-	_, err = svc.UpdateItem(input)
 
 	if err != nil {
 		fmt.Println("Got error calling UpdateItem:")
@@ -66,5 +33,5 @@ func UpdateWorkHandle(arg UpdateWork, identity define.Identity) (interface{}, er
 		return nil, err
 	}
 
-	return true, nil
+	return arg.Work, nil
 }
