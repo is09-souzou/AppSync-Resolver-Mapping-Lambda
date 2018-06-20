@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"encoding/json"
 	"errors"
 
@@ -12,10 +13,13 @@ import (
 type payload struct {
 	Field     string          `json:"field"`
 	Arguments json.RawMessage `json:"arguments"`
-	Sub       string          `json:"sub"`
+	Sub       string          `json:"identity"`
 }
 
 func router(payload payload) (interface{}, error) {
+	fmt.Print("==== debug point ====")
+	fmt.Print("+%v", payload.Sub)
+	fmt.Print("==== debug point ====")
 	switch payload.Field {
 	case "createUser":
 		var p user.CreateUser
