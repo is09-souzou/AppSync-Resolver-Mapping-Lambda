@@ -10,12 +10,12 @@ import (
 )
 
 // CreateWorkHandle Create Work Handle
-func CreateWorkHandle(arg WorkCreate, identity define.Identity) (interface{}, error) {
+func CreateWorkHandle(arg WorkCreate, identity define.Identity) (WorkResult, error) {
 
 	uuid, err := uuid.NewUUID()
 
 	if err != nil {
-		return nil, err
+		return WorkResult{}, err
 	}
 
 	id := uuid.String()
@@ -30,8 +30,8 @@ func CreateWorkHandle(arg WorkCreate, identity define.Identity) (interface{}, er
 		&arg.Work.Description,
 		&createdAt,
 	); err != nil {
-		return nil, err
+		return WorkResult{}, err
 	}
 
-	return arg.Work, nil
+	return WorkResult{}, nil
 }
