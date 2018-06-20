@@ -40,7 +40,7 @@ func CreateUser(user UserCreate) error {
 
 	input := &dynamodb.PutItemInput{
 		Item:      item,
-		TableName: aws.String("Movies"),
+		TableName: aws.String(UserTableName),
 	}
 
 	_, err = svc.PutItem(input)

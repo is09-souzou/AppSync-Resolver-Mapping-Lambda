@@ -36,7 +36,7 @@ func CreateWork(work WorkCreate) error {
 
 	input := &dynamodb.PutItemInput{
 		Item:      item,
-		TableName: aws.String("Movies"),
+		TableName: aws.String(WorkTableName),
 	}
 
 	_, err = svc.PutItem(input)
