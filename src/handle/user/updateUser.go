@@ -10,17 +10,17 @@ import (
 // UpdateWorkHandle Update Work Handle
 func UpdateWorkHandle(arg UserUpdate, identity define.Identity) (interface{}, error) {
 
-	err := model.UpdateUserByID(
-		&identity.Sub,
-		arg.User.Email,
-		arg.User.Name,
-		arg.User.Career,
-		arg.User.AvatarURI,
-		arg.User.Message,
-	)
+	err := model.UpdateUserByID(model.UserUpdate{
+		ID:        identity.Sub,
+		Email:     arg.User.Email,
+		Name:      arg.User.Name,
+		Career:    arg.User.Career,
+		AvatarURI: arg.User.AvatarURI,
+		Message:   arg.User.Message,
+	})
 
 	if err != nil {
-		fmt.Println("Got error calling UpdateItem:")
+		fmt.Println("Got error calling UpdateWorkHandle:")
 		fmt.Println(err.Error())
 		return nil, err
 	}

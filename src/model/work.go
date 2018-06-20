@@ -12,27 +12,8 @@ import (
 // WorkTableName DynamoDB Work Table Name
 const WorkTableName = "portal-works"
 
-// Work DynamoDB Work Struct
-type Work struct {
-	ID          string
-	UserID      string
-	Title       string
-	Tag         []string
-	ImageURI    string
-	Description string
-	CreatedAt   int
-}
-
-// CreateUser Get user list By ID from DynamoDB
-func CreateWork(
-	id *string,
-	userID *string,
-	title *string,
-	tag *[]string,
-	imageURI *string,
-	description *string,
-	createdAt *int,
-) error {
+// CreateWork Create work to DynamoDB
+func CreateWork(work WorkCreate) error {
 
 	svc, err := getSVC()
 
@@ -40,38 +21,17 @@ func CreateWork(
 		return err
 	}
 
-	if id == nil && userID == nil && title == nil && tag == nil && imageURI == nil && description == nil && createdAt == nil {
-		return errors.New("required new value")
-	}
-
 	var item = map[string]*dynamodb.AttributeValue{}
 
-	if id != nil {
-		item["userId"].S = aws.String(*userID)
-	}
+	item["id"].S = aws.String(work.ID)
+	item["userId"].S = aws.String(work.UserID)
+	item["title"].S = aws.String(work.Title)
+	item["imageUri"].S = aws.String(work.ImageURI)
+	item["description"].S = aws.String(work.Description)
+	item["createdAt"].N = aws.String(strconv.Itoa(work.CreatedAt))
 
-	if userID != nil {
-		item["userId"].S = aws.String(*userID)
-	}
-
-	if title != nil {
-		item["title"].S = aws.String(*title)
-	}
-
-	if tag != nil {
-		item["tag"].SS = aws.StringSlice(*tag)
-	}
-
-	if imageURI != nil {
-		item["imageUri"].S = aws.String(*imageURI)
-	}
-
-	if description != nil {
-		item["description"].S = aws.String(*description)
-	}
-
-	if createdAt != nil {
-		item["createdAt"].N = aws.String(strconv.Itoa(*createdAt))
+	if work.Tags != nil {
+		item["tags"].SS = aws.StringSlice(*work.Tags)
 	}
 
 	input := &dynamodb.PutItemInput{
@@ -146,15 +106,7 @@ func GetWorkList() ([]Work, error) {
 }
 
 // UpdateWorkByID Update work By ID to DynamoDB
-func UpdateWorkByID(
-	id *string,
-	userID *string,
-	title *string,
-	tag *[]string,
-	imageURI *string,
-	description *string,
-	createdAt *int,
-) error {
+func UpdateWorkByID(work WorkUpdate) error {
 
 	svc, err := getSVC()
 
@@ -162,34 +114,35 @@ func UpdateWorkByID(
 		return err
 	}
 
-	if id == nil && userID == nil && title == nil && tag == nil && imageURI == nil && description == nil && createdAt == nil {
+	if work.UserID == nil && work.Title == nil && work.Tags == nil && work.ImageURI == nil && work.Description == nil && work.CreatedAt == nil {
 		return errors.New("required new value")
 	}
 
 	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
 
-	if userID != nil {
-		expressionAttributeValues["userId"].S = aws.String(*userID)
+
+	if work.UserID != nil {
+		expressionAttributeValues["userId"].S = aws.String(*work.UserID)
 	}
 
-	if title != nil {
-		expressionAttributeValues["title"].S = aws.String(*title)
+	if work.Title != nil {
+		expressionAttributeValues["title"].S = aws.String(*work.Title)
 	}
 
-	if tag != nil {
-		expressionAttributeValues["tag"].SS = aws.StringSlice(*tag)
+	if work.Tags != nil {
+		expressionAttributeValues["tags"].SS = aws.StringSlice(*work.Tags)
 	}
 
-	if imageURI != nil {
-		expressionAttributeValues["imageUri"].S = aws.String(*imageURI)
+	if work.ImageURI != nil {
+		expressionAttributeValues["imageUri"].S = aws.String(*work.ImageURI)
 	}
 
-	if description != nil {
-		expressionAttributeValues["description"].S = aws.String(*description)
+	if work.Description != nil {
+		expressionAttributeValues["description"].S = aws.String(*work.Description)
 	}
 
-	if createdAt != nil {
-		expressionAttributeValues["createdAt"].N = aws.String(strconv.Itoa(*createdAt))
+	if work.CreatedAt != nil {
+		expressionAttributeValues["createdAt"].N = aws.String(strconv.Itoa(*work.CreatedAt))
 	}
 
 	input := &dynamodb.UpdateItemInput{
@@ -197,7 +150,7 @@ func UpdateWorkByID(
 		ExpressionAttributeValues: expressionAttributeValues,
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
-				S: aws.String(*id),
+				S: aws.String(work.ID),
 			},
 		},
 		ReturnValues:     aws.String("UPDATED_NEW"),

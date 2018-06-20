@@ -19,3 +19,66 @@ func getSVC() (*dynamodb.DynamoDB, error) {
 
 	return svc, nil
 }
+
+// User DynamoDB Resut User Struct
+type User struct {
+	ID        string
+	Email     string
+	Name      string
+	Career    *string
+	AvatarURI *string
+	Message   *string
+}
+
+// UserCreate DynamoDB Create User Struct
+type UserCreate struct {
+	ID        string
+	Email     string
+	Name      string
+	Career    *string
+	AvatarURI *string
+	Message   *string
+}
+
+// UserUpdate DynamoDB Update User Struct
+type UserUpdate struct {
+	ID        string
+	Email     *string
+	Name      *string
+	Career    *string
+	AvatarURI *string
+	Message   *string
+}
+
+// Work DynamoDB Result Work Struct
+type Work struct {
+	ID          string
+	UserID      string
+	Title       string
+	Tags        []string
+	ImageURI    string
+	Description string
+	CreatedAt   int
+}
+
+// WorkCreate DynamoDB Create Work Struct
+type WorkCreate struct {
+	ID          string
+	UserID      string
+	Title       string
+	Tags        *[]string
+	ImageURI    string
+	Description string
+	CreatedAt   int
+}
+
+// WorkUpdate DynamoDB Create Work Struct
+type WorkUpdate struct {
+	ID          string
+	UserID      *string
+	Title       *string
+	Tags        *[]string
+	ImageURI    *string
+	Description *string
+	CreatedAt   *int
+}

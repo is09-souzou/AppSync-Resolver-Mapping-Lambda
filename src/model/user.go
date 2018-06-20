@@ -11,25 +11,8 @@ import (
 // UserTableName DynamoDB User Table Name
 const UserTableName = "portal-users"
 
-// User DynamoDB User Struct
-type User struct {
-	ID        string
-	Email     string
-	Name      string
-	Career    string
-	AvatarURI string
-	Message   string
-}
-
-// CreateUser Get user list By ID from DynamoDB
-func CreateUser(
-	id *string,
-	email *string,
-	name *string,
-	career *string,
-	avatarURI *string,
-	message *string,
-) error {
+// CreateUser Create user to DynamoDB
+func CreateUser(user UserCreate) error {
 
 	svc, err := getSVC()
 
@@ -37,34 +20,22 @@ func CreateUser(
 		return err
 	}
 
-	if id == nil && email == nil && name == nil && career == nil && avatarURI == nil && message == nil {
-		return errors.New("required new value")
-	}
-
 	var item = map[string]*dynamodb.AttributeValue{}
 
-	if id != nil {
-		item["id"].S = aws.String(*id)
+	item["id"].S = aws.String(user.ID)
+	item["email"].S = aws.String(user.Email)
+	item["name"].S = aws.String(user.Name)
+
+	if user.Career != nil {
+		item["career"].S = aws.String(*user.Career)
 	}
 
-	if email != nil {
-		item["email"].S = aws.String(*email)
+	if user.AvatarURI != nil {
+		item["avatarURI"].S = aws.String(*user.AvatarURI)
 	}
 
-	if name != nil {
-		item["name"].S = aws.String(*name)
-	}
-
-	if career != nil {
-		item["career"].S = aws.String(*career)
-	}
-
-	if avatarURI != nil {
-		item["avatarURI"].S = aws.String(*avatarURI)
-	}
-
-	if message != nil {
-		item["message"].S = aws.String(*message)
+	if user.Message != nil {
+		item["message"].S = aws.String(*user.Message)
 	}
 
 	input := &dynamodb.PutItemInput{
@@ -139,14 +110,7 @@ func GetUserList() ([]User, error) {
 }
 
 // UpdateUserByID Update user By ID to DynamoDB
-func UpdateUserByID(
-	id *string,
-	email *string,
-	name *string,
-	career *string,
-	avatarURI *string,
-	message *string,
-) error {
+func UpdateUserByID(user UserUpdate) error {
 
 	svc, err := getSVC()
 
@@ -154,30 +118,30 @@ func UpdateUserByID(
 		return err
 	}
 
-	if id == nil && email == nil && name == nil && career == nil && avatarURI == nil && message == nil {
+	if user.Email == nil && user.Name == nil && user.Career == nil && user.AvatarURI == nil && user.Message == nil {
 		return errors.New("required new value")
 	}
 
 	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
 
-	if email != nil {
-		expressionAttributeValues["email"].S = aws.String(*email)
+	if user.Email != nil {
+		expressionAttributeValues["email"].S = aws.String(*user.Email)
 	}
 
-	if name != nil {
-		expressionAttributeValues["name"].S = aws.String(*name)
+	if user.Name != nil {
+		expressionAttributeValues["name"].S = aws.String(*user.Name)
 	}
 
-	if career != nil {
-		expressionAttributeValues["career"].S = aws.String(*career)
+	if user.Career != nil {
+		expressionAttributeValues["career"].S = aws.String(*user.Career)
 	}
 
-	if avatarURI != nil {
-		expressionAttributeValues["avatarURI"].S = aws.String(*avatarURI)
+	if user.AvatarURI != nil {
+		expressionAttributeValues["avatarURI"].S = aws.String(*user.AvatarURI)
 	}
 
-	if message != nil {
-		expressionAttributeValues["message"].S = aws.String(*message)
+	if user.Message != nil {
+		expressionAttributeValues["message"].S = aws.String(*user.Message)
 	}
 
 	input := &dynamodb.UpdateItemInput{
@@ -185,7 +149,7 @@ func UpdateUserByID(
 		ExpressionAttributeValues: expressionAttributeValues,
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
-				S: aws.String(*id),
+				S: aws.String(user.ID),
 			},
 		},
 		ReturnValues:     aws.String("UPDATED_NEW"),
@@ -199,4 +163,32 @@ func UpdateUserByID(
 	}
 
 	return nil
+}
+
+// DeleteUserByID Delete DynamoDB user By ID
+func DeleteUserByID(id string) error {
+
+	svc, err := getSVC()
+
+	if err != nil {
+		return err
+	}
+
+	input := &dynamodb.DeleteItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(id),
+			},
+		},
+		TableName: aws.String("portal-users"),
+	}
+
+	_, err = svc.DeleteItem(input)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }

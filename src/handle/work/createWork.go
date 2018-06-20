@@ -1,6 +1,7 @@
 package work
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
@@ -21,15 +22,17 @@ func CreateWorkHandle(arg WorkCreate, identity define.Identity) (WorkResult, err
 	id := uuid.String()
 	createdAt := int(time.Now().Unix())
 
-	if err := model.CreateWork(
-		&id,
-		&arg.Work.UserID,
-		&arg.Work.Title,
-		arg.Work.Tags,
-		&arg.Work.ImageURI,
-		&arg.Work.Description,
-		&createdAt,
-	); err != nil {
+	if err := model.CreateWork(model.WorkCreate{
+		ID:          id,
+		UserID:      arg.Work.UserID,
+		Title:       arg.Work.Title,
+		Tags:        arg.Work.Tags,
+		ImageURI:    arg.Work.ImageURI,
+		Description: arg.Work.Description,
+		CreatedAt:   createdAt,
+	}); err != nil {
+		fmt.Println("Got error calling CreateWorkHandle:")
+		fmt.Println(err.Error())
 		return WorkResult{}, err
 	}
 
