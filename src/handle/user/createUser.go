@@ -16,6 +16,9 @@ type CreateUser struct {
 	User User `json:"User"`
 }
 
+// UserTableName DynamoDB User Table Name
+const UserTableName = "portal-users"
+
 // CreateUserHandle Create User Handle
 func CreateUserHandle(arg CreateUser, identity define.Identity) (interface{}, error) {
 
@@ -41,7 +44,7 @@ func CreateUserHandle(arg CreateUser, identity define.Identity) (interface{}, er
 
 	input := &dynamodb.PutItemInput{
 		Item:      user,
-		TableName: aws.String("portal-Users"),
+		TableName: aws.String(UserTableName),
 	}
 
 	_, err = svc.PutItem(input)
