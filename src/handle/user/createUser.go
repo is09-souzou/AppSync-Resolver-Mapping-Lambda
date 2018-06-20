@@ -33,6 +33,7 @@ func CreateUserHandle(arg CreateUser, identity define.Identity) (interface{}, er
 	svc := dynamodb.New(session)
 
 	arg.User.ID = identity.Sub
+	arg.User.Email = identity.UserName
 	fmt.Printf("print ID %+v\n", arg.User)
 
 	user, err := dynamodbattribute.MarshalMap(arg.User)
