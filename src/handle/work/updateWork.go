@@ -2,7 +2,6 @@ package work
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
@@ -16,7 +15,7 @@ type UpdateWork struct {
 // UpdateWorkHandle Update Work Handle
 func UpdateWorkHandle(arg UpdateWork, identity define.Identity) (interface{}, error) {
 
-	arg.Work.CreatedAt = int(time.Now().Unix())
+	// arg.Work.CreatedAt = int(time.Now().Unix())
 
 	err := model.UpdateWorkByID(
 		&arg.Work.ID,
