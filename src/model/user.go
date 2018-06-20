@@ -13,9 +13,12 @@ const UserTableName = "portal-users"
 
 // User DynamoDB User Struct
 type User struct {
-	ID    string `json:"id"`
-	Email string `json:"email"`
-	Name  string `json:"name"`
+	ID        string
+	Email     string
+	Name      string
+	Career    string
+	AvatarURI string
+	Message   string
 }
 
 // CreateUser Get user list By ID from DynamoDB
@@ -23,12 +26,19 @@ func CreateUser(
 	id *string,
 	email *string,
 	name *string,
+	career *string,
+	avatarURI *string,
+	message *string,
 ) error {
 
 	svc, err := getSVC()
 
 	if err != nil {
 		return err
+	}
+
+	if id == nil && email == nil && name == nil && career == nil && avatarURI == nil && message == nil {
+		return errors.New("required new value")
 	}
 
 	var item = map[string]*dynamodb.AttributeValue{}
@@ -43,6 +53,18 @@ func CreateUser(
 
 	if name != nil {
 		item["name"].S = aws.String(*name)
+	}
+
+	if career != nil {
+		item["career"].S = aws.String(*career)
+	}
+
+	if avatarURI != nil {
+		item["avatarURI"].S = aws.String(*avatarURI)
+	}
+
+	if message != nil {
+		item["message"].S = aws.String(*message)
 	}
 
 	input := &dynamodb.PutItemInput{
@@ -121,6 +143,9 @@ func UpdateUserByID(
 	id *string,
 	email *string,
 	name *string,
+	career *string,
+	avatarURI *string,
+	message *string,
 ) error {
 
 	svc, err := getSVC()
@@ -129,18 +154,30 @@ func UpdateUserByID(
 		return err
 	}
 
-	if &id == nil && &email == nil && &name == nil {
+	if id == nil && email == nil && name == nil && career == nil && avatarURI == nil && message == nil {
 		return errors.New("required new value")
 	}
 
 	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
 
-	if &email != nil {
+	if email != nil {
 		expressionAttributeValues["email"].S = aws.String(*email)
 	}
 
-	if &name != nil {
+	if name != nil {
 		expressionAttributeValues["name"].S = aws.String(*name)
+	}
+
+	if career != nil {
+		expressionAttributeValues["career"].S = aws.String(*career)
+	}
+
+	if avatarURI != nil {
+		expressionAttributeValues["avatarURI"].S = aws.String(*avatarURI)
+	}
+
+	if message != nil {
+		expressionAttributeValues["message"].S = aws.String(*message)
 	}
 
 	input := &dynamodb.UpdateItemInput{
