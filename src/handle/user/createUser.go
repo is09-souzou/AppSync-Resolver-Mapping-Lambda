@@ -8,7 +8,7 @@ import (
 )
 
 // CreateUserHandle Create User Handle
-func CreateUserHandle(arg UserCreate, identity define.Identity) (interface{}, error) {
+func CreateUserHandle(arg UserCreate, identity define.Identity) (UserResult, error) {
 
 	err := model.CreateUser(model.UserCreate{
 		ID:        identity.Sub,
@@ -22,8 +22,9 @@ func CreateUserHandle(arg UserCreate, identity define.Identity) (interface{}, er
 	if err != nil {
 		fmt.Println("Got error calling CreateUserHandle:")
 		fmt.Println(err.Error())
-		return nil, err
+		return UserResult{}, err
 	}
 
-	return arg.User, nil
+	// TODO input result value
+	return UserResult{}, nil
 }

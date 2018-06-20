@@ -8,15 +8,16 @@ import (
 )
 
 // DeleteUserHandle Delete User Handle
-func DeleteUserHandle(arg UserDelete, identity define.Identity) (interface{}, error) {
+func DeleteUserHandle(arg UserDelete, identity define.Identity) (UserResult, error) {
 
 	err := model.DeleteUserByID(arg.ID)
 
 	if err != nil {
 		fmt.Println("Got error calling DeleteUserHandle:")
 		fmt.Println(err.Error())
-		return nil, err
+		return UserResult{}, err
 	}
 
-	return arg, nil
+	// TODO input result value
+	return UserResult{}, nil
 }

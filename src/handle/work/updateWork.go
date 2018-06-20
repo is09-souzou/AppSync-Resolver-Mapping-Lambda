@@ -9,7 +9,7 @@ import (
 )
 
 // UpdateWorkHandle Update Work Handle
-func UpdateWorkHandle(arg WorkUpdate, identity define.Identity) (interface{}, error) {
+func UpdateWorkHandle(arg WorkUpdate, identity define.Identity) (WorkResult, error) {
 
 	createdAt := int(time.Now().Unix())
 
@@ -26,8 +26,9 @@ func UpdateWorkHandle(arg WorkUpdate, identity define.Identity) (interface{}, er
 	if err != nil {
 		fmt.Println("Got error calling UpdateWorkHandle:")
 		fmt.Println(err.Error())
-		return nil, err
+		return WorkResult{}, err
 	}
 
-	return arg.Work, nil
+	// TODO input result value
+	return WorkResult{}, nil
 }

@@ -30,11 +30,14 @@ func CreateWorkHandle(arg WorkCreate, identity define.Identity) (WorkResult, err
 		ImageURI:    arg.Work.ImageURI,
 		Description: arg.Work.Description,
 		CreatedAt:   createdAt,
-	}); err != nil {
+	});
+	
+	err != nil {
 		fmt.Println("Got error calling CreateWorkHandle:")
 		fmt.Println(err.Error())
 		return WorkResult{}, err
 	}
 
+	// TODO input result value
 	return WorkResult{}, nil
 }

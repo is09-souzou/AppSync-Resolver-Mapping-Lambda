@@ -8,7 +8,7 @@ import (
 )
 
 // UpdateWorkHandle Update Work Handle
-func UpdateWorkHandle(arg UserUpdate, identity define.Identity) (interface{}, error) {
+func UpdateWorkHandle(arg UserUpdate, identity define.Identity) (UserResult, error) {
 
 	err := model.UpdateUserByID(model.UserUpdate{
 		ID:        identity.Sub,
@@ -22,8 +22,9 @@ func UpdateWorkHandle(arg UserUpdate, identity define.Identity) (interface{}, er
 	if err != nil {
 		fmt.Println("Got error calling UpdateWorkHandle:")
 		fmt.Println(err.Error())
-		return nil, err
+		return UserResult{}, err
 	}
 
-	return arg.User, nil
+	// TODO input result value
+	return UserResult{}, nil
 }
