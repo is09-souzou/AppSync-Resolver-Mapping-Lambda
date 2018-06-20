@@ -48,6 +48,9 @@ func UpdateWorkHandle(arg UpdateWork, sub string) (interface{}, error) {
 			"description": {
 				S: aws.String(arg.Work.Description),
 			},
+			"createdAt": {
+				S: aws.String("1529316111"),
+			},
 		},
 		ReturnValues:     aws.String("UPDATED_NEW"),
 		UpdateExpression: aws.String(""),
