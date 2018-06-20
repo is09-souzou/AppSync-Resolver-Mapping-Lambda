@@ -129,17 +129,17 @@ func UpdateUserByID(
 		return err
 	}
 
-	if id == nil && email == nil && name == nil {
+	if &id == nil && &email == nil && &name == nil {
 		return errors.New("required new value")
 	}
 
 	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
 
-	if email != nil {
+	if &email != nil {
 		expressionAttributeValues["email"].S = aws.String(*email)
 	}
 
-	if name != nil {
+	if &name != nil {
 		expressionAttributeValues["name"].S = aws.String(*name)
 	}
 
