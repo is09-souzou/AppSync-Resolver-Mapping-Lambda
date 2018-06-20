@@ -25,6 +25,7 @@ func UpdateWorkHandle(arg UpdateWork, identity define.Identity) (interface{}, er
 		&arg.Work.Tags,
 		&arg.Work.ImageURI,
 		&arg.Work.Description,
+		&arg.Work.CreatedAt,
 	)
 
 	if err != nil {
