@@ -10,13 +10,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
-// DeleteUser type
-type DeleteUser struct {
-	ID string `json:"id"`
-}
-
 // DeleteUserHandle Delete User Handle
-func DeleteUserHandle(arg DeleteUser, identity define.Identity) (interface{}, error) {
+func DeleteUserHandle(arg UserDelete, identity define.Identity) (interface{}, error) {
 
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},

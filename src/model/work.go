@@ -23,6 +23,71 @@ type Work struct {
 	CreatedAt   int
 }
 
+// CreateUser Get user list By ID from DynamoDB
+func CreateWork(
+	id *string,
+	userID *string,
+	title *string,
+	tag *[]string,
+	imageURI *string,
+	description *string,
+	createdAt *int,
+) error {
+
+	svc, err := getSVC()
+
+	if err != nil {
+		return err
+	}
+
+	if id == nil && userID == nil && title == nil && tag == nil && imageURI == nil && description == nil && createdAt == nil {
+		return errors.New("required new value")
+	}
+
+	var item = map[string]*dynamodb.AttributeValue{}
+
+	if id != nil {
+		item["userId"].S = aws.String(*userID)
+	}
+
+	if userID != nil {
+		item["userId"].S = aws.String(*userID)
+	}
+
+	if title != nil {
+		item["title"].S = aws.String(*title)
+	}
+
+	if tag != nil {
+		item["tag"].SS = aws.StringSlice(*tag)
+	}
+
+	if imageURI != nil {
+		item["imageUri"].S = aws.String(*imageURI)
+	}
+
+	if description != nil {
+		item["description"].S = aws.String(*description)
+	}
+
+	if createdAt != nil {
+		item["createdAt"].N = aws.String(strconv.Itoa(*createdAt))
+	}
+
+	input := &dynamodb.PutItemInput{
+		Item:      item,
+		TableName: aws.String("Movies"),
+	}
+
+	_, err = svc.PutItem(input)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // GetWorkByID Get work by ID from DynamoDB
 func GetWorkByID(id string) (Work, error) {
 

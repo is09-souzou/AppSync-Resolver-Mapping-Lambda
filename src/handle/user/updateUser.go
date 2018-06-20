@@ -7,21 +7,16 @@ import (
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
 )
 
-// UpdateUser type
-type UpdateUser struct {
-	User User `json:"User"`
-}
-
 // UpdateWorkHandle Update Work Handle
-func UpdateWorkHandle(arg UpdateUser, identity define.Identity) (interface{}, error) {
+func UpdateWorkHandle(arg UserUpdate, identity define.Identity) (interface{}, error) {
 
 	err := model.UpdateUserByID(
 		&identity.Sub,
-		&arg.User.Email,
-		&arg.User.Name,
-		&arg.User.Career,
-		&arg.User.AvatarURI,
-		&arg.User.Message,
+		arg.User.Email,
+		arg.User.Name,
+		arg.User.Career,
+		arg.User.AvatarURI,
+		arg.User.Message,
 	)
 
 	if err != nil {
