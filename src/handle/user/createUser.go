@@ -10,6 +10,8 @@ import (
 // CreateUserHandle Create User Handle
 func CreateUserHandle(arg UserCreate, identity define.Identity) (UserResult, error) {
 
+	fmt.Print("sub",identity.Sub)
+
 	err := model.CreateUser(model.UserCreate{
 		ID:        identity.Sub,
 		Email:     arg.User.Email,

@@ -20,22 +20,28 @@ func CreateUser(user UserCreate) error {
 		return err
 	}
 
-	var item = map[string]*dynamodb.AttributeValue{}
-
-	item["id"].S = aws.String(user.ID)
-	item["email"].S = aws.String(user.Email)
-	item["name"].S = aws.String(user.Name)
+	var item = map[string]*dynamodb.AttributeValue{
+		"id": {
+			S: aws.String(user.ID),
+		},
+		"email": {
+			S: aws.String(user.Email),
+		},
+		"name": {
+			S: aws.String(user.Name),
+		},
+	}
 
 	if user.Career != nil {
-		item["career"].S = aws.String(*user.Career)
+		item["career"] = &dynamodb.AttributeValue{S: aws.String(*user.Career)}
 	}
 
 	if user.AvatarURI != nil {
-		item["avatarURI"].S = aws.String(*user.AvatarURI)
+		item["avatarUri"] = &dynamodb.AttributeValue{S: aws.String(*user.AvatarURI)}
 	}
 
 	if user.Message != nil {
-		item["message"].S = aws.String(*user.Message)
+		item["message"] = &dynamodb.AttributeValue{S: aws.String(*user.Message)}
 	}
 
 	input := &dynamodb.PutItemInput{
@@ -125,23 +131,23 @@ func UpdateUserByID(user UserUpdate) error {
 	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
 
 	if user.Email != nil {
-		expressionAttributeValues["email"].S = aws.String(*user.Email)
+		expressionAttributeValues["email"] = &dynamodb.AttributeValue{S: aws.String(*user.Email)}
 	}
 
 	if user.Name != nil {
-		expressionAttributeValues["name"].S = aws.String(*user.Name)
+		expressionAttributeValues["name"] = &dynamodb.AttributeValue{S: aws.String(*user.Name)}
 	}
 
 	if user.Career != nil {
-		expressionAttributeValues["career"].S = aws.String(*user.Career)
+		expressionAttributeValues["career"] = &dynamodb.AttributeValue{S: aws.String(*user.Career)}
 	}
 
 	if user.AvatarURI != nil {
-		expressionAttributeValues["avatarURI"].S = aws.String(*user.AvatarURI)
+		expressionAttributeValues["avatarUri"] = &dynamodb.AttributeValue{S: aws.String(*user.AvatarURI)}
 	}
 
 	if user.Message != nil {
-		expressionAttributeValues["message"].S = aws.String(*user.Message)
+		expressionAttributeValues["message"] = &dynamodb.AttributeValue{S: aws.String(*user.Message)}
 	}
 
 	input := &dynamodb.UpdateItemInput{
@@ -180,7 +186,7 @@ func DeleteUserByID(id string) error {
 				S: aws.String(id),
 			},
 		},
-		TableName: aws.String("portal-users"),
+		TableName: aws.String(UserTableName),
 	}
 
 	_, err = svc.DeleteItem(input)

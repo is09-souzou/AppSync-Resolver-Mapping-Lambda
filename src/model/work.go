@@ -21,17 +21,29 @@ func CreateWork(work WorkCreate) error {
 		return err
 	}
 
-	var item = map[string]*dynamodb.AttributeValue{}
-
-	item["id"].S = aws.String(work.ID)
-	item["userId"].S = aws.String(work.UserID)
-	item["title"].S = aws.String(work.Title)
-	item["imageUri"].S = aws.String(work.ImageURI)
-	item["description"].S = aws.String(work.Description)
-	item["createdAt"].N = aws.String(strconv.Itoa(work.CreatedAt))
+	var item = map[string]*dynamodb.AttributeValue{
+		"id": {
+			S: aws.String(work.ID),
+		},
+		"userId": {
+			S: aws.String(work.UserID),
+		},
+		"title": {
+			S: aws.String(work.Title),
+		},
+		"imageUri": {
+			S: aws.String(work.ImageURI),
+		},
+		"description": {
+			S: aws.String(work.Description),
+		},
+		"createdAt": {
+			S: aws.String(strconv.Itoa(work.CreatedAt)),
+		},
+	}
 
 	if work.Tags != nil {
-		item["tags"].SS = aws.StringSlice(*work.Tags)
+		item["tags"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.Tags)}
 	}
 
 	input := &dynamodb.PutItemInput{
@@ -120,29 +132,28 @@ func UpdateWorkByID(work WorkUpdate) error {
 
 	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
 
-
 	if work.UserID != nil {
-		expressionAttributeValues["userId"].S = aws.String(*work.UserID)
+		expressionAttributeValues["userId"] = &dynamodb.AttributeValue{S: aws.String(*work.UserID)}
 	}
 
 	if work.Title != nil {
-		expressionAttributeValues["title"].S = aws.String(*work.Title)
+		expressionAttributeValues["title"] = &dynamodb.AttributeValue{S: aws.String(*work.Title)}
 	}
 
 	if work.Tags != nil {
-		expressionAttributeValues["tags"].SS = aws.StringSlice(*work.Tags)
+		expressionAttributeValues["tags"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.Tags)}
 	}
 
 	if work.ImageURI != nil {
-		expressionAttributeValues["imageUri"].S = aws.String(*work.ImageURI)
+		expressionAttributeValues["imageUri"] = &dynamodb.AttributeValue{S: aws.String(*work.ImageURI)}
 	}
 
 	if work.Description != nil {
-		expressionAttributeValues["description"].S = aws.String(*work.Description)
+		expressionAttributeValues["description"] = &dynamodb.AttributeValue{S: aws.String(*work.Description)}
 	}
 
 	if work.CreatedAt != nil {
-		expressionAttributeValues["createdAt"].N = aws.String(strconv.Itoa(*work.CreatedAt))
+		expressionAttributeValues["createdAt"] = &dynamodb.AttributeValue{N: aws.String(string(*work.CreatedAt))}
 	}
 
 	input := &dynamodb.UpdateItemInput{
