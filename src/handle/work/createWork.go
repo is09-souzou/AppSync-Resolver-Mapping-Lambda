@@ -20,7 +20,7 @@ func CreateWorkHandle(arg WorkCreate, identity define.Identity) (Work, error) {
 	}
 
 	id := uuid.String()
-	createdAt := int(time.Now().Unix())
+	createdAt := time.Now().Unix()
 
 	if err := model.CreateWork(model.WorkCreate{
 		ID:          id,
@@ -29,7 +29,7 @@ func CreateWorkHandle(arg WorkCreate, identity define.Identity) (Work, error) {
 		Tags:        arg.Work.Tags,
 		ImageURI:    arg.Work.ImageURI,
 		Description: arg.Work.Description,
-		CreatedAt:   createdAt,
+		CreatedAt:   string(createdAt),
 	}); err != nil {
 		fmt.Println("Got error calling CreateWorkHandle:")
 		fmt.Println(err.Error())
@@ -43,7 +43,7 @@ func CreateWorkHandle(arg WorkCreate, identity define.Identity) (Work, error) {
 		Tags:        arg.Work.Tags,
 		ImageURI:    arg.Work.ImageURI,
 		Description: arg.Work.Description,
-		CreatedAt:   createdAt,
+		CreatedAt:   int(createdAt),
 	}
 
 	return result, nil

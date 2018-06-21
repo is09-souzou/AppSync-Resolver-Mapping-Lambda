@@ -58,7 +58,7 @@ type Work struct {
 	Tags        []string
 	ImageURI    string
 	Description string
-	CreatedAt   int
+	CreatedAt   string
 }
 
 // WorkCreate DynamoDB Create Work Struct
@@ -69,7 +69,7 @@ type WorkCreate struct {
 	Tags        *[]string
 	ImageURI    string
 	Description string
-	CreatedAt   int
+	CreatedAt   string
 }
 
 // WorkUpdate DynamoDB Create Work Struct
@@ -80,5 +80,5 @@ type WorkUpdate struct {
 	Tags        *[]string
 	ImageURI    *string
 	Description *string
-	CreatedAt   *int
+	CreatedAt   *string
 }

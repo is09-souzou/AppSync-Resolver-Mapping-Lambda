@@ -2,7 +2,6 @@ package model
 
 import (
 	"errors"
-	"strconv"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -38,7 +37,7 @@ func CreateWork(work WorkCreate) error {
 			S: aws.String(work.Description),
 		},
 		"createdAt": {
-			S: aws.String(strconv.Itoa(work.CreatedAt)),
+			S: aws.String(work.CreatedAt),
 		},
 	}
 
