@@ -176,3 +176,59 @@ func UpdateWorkByID(work WorkUpdate) error {
 
 	return nil
 }
+
+// DeleteWorkByID Delete DynamoDB work By ID
+func DeleteWorkByID(id string) error {
+
+	svc, err := getSVC()
+
+	if err != nil {
+		return err
+	}
+
+	input := &dynamodb.DeleteItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(id),
+			},
+		},
+		TableName: aws.String(WorkTableName),
+	}
+
+	_, err = svc.DeleteItem(input)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+// DeleteWorkByUserID Delete DynamoDB work By UserID
+func DeleteWorkByUserID(userID string) error {
+
+	svc, err := getSVC()
+
+	if err != nil {
+		return err
+	}
+
+	input := &dynamodb.DeleteItemInput{
+		Key: map[string]*dynamodb.AttributeValue{
+			"userId": {
+				S: aws.String(userID),
+			},
+		},
+		TableName: aws.String(WorkTableName),
+	}
+
+	_, err = svc.DeleteItem(input)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}

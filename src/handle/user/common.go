@@ -1,7 +1,7 @@
 package user
 
-// UserResult response user struct
-type UserResult struct {
+// User response user struct
+type User struct {
 	ID        string  `json:"id"`
 	Email     string  `json:"email"`
 	Name      string  `json:"name"`
