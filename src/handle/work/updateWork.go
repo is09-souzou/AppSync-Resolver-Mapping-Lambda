@@ -1,6 +1,7 @@
 package work
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -9,7 +10,12 @@ import (
 )
 
 // UpdateWorkHandle Update Work Handle
-func UpdateWorkHandle(arg WorkUpdate, identity define.Identity) (WorkResult, error) {
+// Only the principal can be update
+func UpdateWorkHandle(arg WorkUpdate, identity define.Identity) (Work, error) {
+
+	if (arg.Work.UserID != identity.Sub) {
+		return Work{}, errors.New("Only the created user can be update")
+	}
 
 	createdAt := int(time.Now().Unix())
 
@@ -26,9 +32,9 @@ func UpdateWorkHandle(arg WorkUpdate, identity define.Identity) (WorkResult, err
 	if err != nil {
 		fmt.Println("Got error calling UpdateWorkHandle:")
 		fmt.Println(err.Error())
-		return WorkResult{}, err
+		return Work{}, err
 	}
 
 	// TODO input result value
-	return WorkResult{}, nil
+	return Work{}, nil
 }

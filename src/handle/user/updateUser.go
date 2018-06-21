@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
@@ -8,7 +9,12 @@ import (
 )
 
 // UpdateWorkHandle Update Work Handle
+// Can update only oneself
 func UpdateWorkHandle(arg UserUpdate, identity define.Identity) (User, error) {
+
+	if (arg.User.ID != identity.Sub) {
+		return User{}, errors.New("Can update only oneself")
+	}
 
 	err := model.UpdateUserByID(model.UserUpdate{
 		ID:        identity.Sub,

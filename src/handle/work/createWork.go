@@ -11,12 +11,12 @@ import (
 )
 
 // CreateWorkHandle Create Work Handle
-func CreateWorkHandle(arg WorkCreate, identity define.Identity) (WorkResult, error) {
+func CreateWorkHandle(arg WorkCreate, identity define.Identity) (Work, error) {
 
 	uuid, err := uuid.NewUUID()
 
 	if err != nil {
-		return WorkResult{}, err
+		return Work{}, err
 	}
 
 	id := uuid.String()
@@ -35,9 +35,9 @@ func CreateWorkHandle(arg WorkCreate, identity define.Identity) (WorkResult, err
 	err != nil {
 		fmt.Println("Got error calling CreateWorkHandle:")
 		fmt.Println(err.Error())
-		return WorkResult{}, err
+		return Work{}, err
 	}
 
 	// TODO input result value
-	return WorkResult{}, nil
+	return Work{}, nil
 }

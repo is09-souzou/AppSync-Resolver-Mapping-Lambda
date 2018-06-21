@@ -1,7 +1,7 @@
 package work
 
 // WorkResult response work struct
-type WorkResult struct {
+type Work struct {
 	UserID      string    `json:"userId"`
 	Title       string    `json:"title"`
 	Tags        *[]string `json:"tags"`
