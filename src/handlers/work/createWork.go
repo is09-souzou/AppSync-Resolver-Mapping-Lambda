@@ -29,7 +29,7 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 		Tags:        arg.Work.Tags,
 		ImageURI:    arg.Work.ImageURI,
 		Description: arg.Work.Description,
-		CreatedAt:   string(createdAt),
+		CreatedAt:   fmt.Sprint(createdAt),
 	}); err != nil {
 		fmt.Println("Got error calling CreateWorkHandle:")
 		fmt.Println(err.Error())

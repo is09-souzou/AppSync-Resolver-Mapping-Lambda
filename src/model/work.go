@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 )
 
 // WorkTableName DynamoDB Work Table Name
@@ -228,22 +229,65 @@ func DeleteWorkByUserID(userID string) error {
 	if err != nil {
 		return err
 	}
+	filt := expression.Name("userId").Equal(expression.Value(userID))
 
-	input := &dynamodb.DeleteItemInput{
-		Key: map[string]*dynamodb.AttributeValue{
-			"userId": {
-				S: aws.String(userID),
-			},
-		},
-		TableName: aws.String(WorkTableName),
-	}
-
-	_, err = svc.DeleteItem(input)
+	expr, err := expression.NewBuilder().WithFilter(filt).Build()
 
 	if err != nil {
 		return err
 	}
 
-	return nil
+	params := &dynamodb.ScanInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		TableName:                 aws.String(WorkTableName),
+	}
 
+	result, err := svc.Scan(params)
+
+	if err != nil {
+		return err
+	}
+
+	writeRequest := []*dynamodb.WriteRequest{}
+
+	if len(result.Items) != 0 {
+		for _, i := range result.Items {
+			item := Work{}
+			err = dynamodbattribute.UnmarshalMap(i, &item)
+
+			writeRequest = append(
+				writeRequest,
+				&dynamodb.WriteRequest{
+					DeleteRequest: &dynamodb.DeleteRequest{
+						Key: map[string]*dynamodb.AttributeValue{
+							"id": {
+								S: aws.String(item.ID),
+							},
+						},
+					},
+				},
+			)
+
+			if err != nil {
+				return err
+			}
+		}
+
+		input := &dynamodb.BatchWriteItemInput{
+			RequestItems: map[string][]*dynamodb.WriteRequest{
+				WorkTableName: writeRequest,
+			},
+		}
+
+		_, err = svc.BatchWriteItem(input)
+
+		if err != nil {
+			return err
+		}
+
+	}
+
+	return nil
 }
