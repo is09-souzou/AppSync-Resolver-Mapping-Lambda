@@ -3,13 +3,13 @@ package user
 import (
 	"fmt"
 
-	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 	"golang.org/x/sync/errgroup"
 )
 
 // DeleteUserHandle Delete User Handle
-func DeleteUserHandle(arg UserDelete, identity define.Identity) (User, error) {
+func DeleteUserHandle(arg UserDelete, identity types.Identity) (User, error) {
 	eg := errgroup.Group{}
 
 	eg.Go(func() error { return model.DeleteUserByID(arg.ID) })

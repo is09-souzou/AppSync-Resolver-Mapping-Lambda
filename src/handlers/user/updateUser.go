@@ -4,15 +4,15 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 )
 
 // UpdateUserHandle Update User Handle
 // Can update only oneself
-func UpdateUserHandle(arg UserUpdate, identity define.Identity) (User, error) {
+func UpdateUserHandle(arg UserUpdate, identity types.Identity) (User, error) {
 
-	if (arg.User.ID != identity.Sub) {
+	if arg.User.ID != identity.Sub {
 		return User{}, errors.New("Can update only oneself")
 	}
 

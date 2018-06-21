@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 )
 
 // UpdateWorkHandle Update Work Handle
 // Only the principal can be update
-func UpdateWorkHandle(arg WorkUpdate, identity define.Identity) (Work, error) {
+func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 
 	work, err := model.GetWorkByID(arg.Work.ID)
 

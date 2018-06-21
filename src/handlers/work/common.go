@@ -28,7 +28,7 @@ type WorkCreate struct {
 // WorkUpdateBase WorkUpdate work struct
 type WorkUpdateBase struct {
 	ID          string    `json:"id"`
-	UserID      *string    `json:"userId"`
+	UserID      *string   `json:"userId"`
 	Title       *string   `json:"title"`
 	Tags        *[]string `json:"tags"`
 	ImageURI    *string   `json:"imageUri"`

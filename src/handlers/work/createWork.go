@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 
 	"github.com/google/uuid"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
 )
 
 // CreateWorkHandle Create Work Handle
-func CreateWorkHandle(arg WorkCreate, identity define.Identity) (Work, error) {
+func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 
 	uuid, err := uuid.NewUUID()
 

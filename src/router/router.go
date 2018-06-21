@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
-	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handle/user"
-	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handle/work"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handlers/user"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handlers/work"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 )
 
 // Router Routing By Field
-func Router(payload define.Payload) (interface{}, error) {
+func Router(payload types.Payload) (interface{}, error) {
 	switch payload.Field {
 	case "createUser":
 		var p user.UserCreate

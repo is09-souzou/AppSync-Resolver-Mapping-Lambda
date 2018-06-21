@@ -3,12 +3,12 @@ package user
 import (
 	"fmt"
 
-	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/define"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 )
 
 // CreateUserHandle Create User Handle
-func CreateUserHandle(arg UserCreate, identity define.Identity) (User, error) {
+func CreateUserHandle(arg UserCreate, identity types.Identity) (User, error) {
 
 	fmt.Print("sub", identity.Sub)
 
