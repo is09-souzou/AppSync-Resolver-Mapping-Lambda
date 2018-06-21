@@ -46,6 +46,5 @@ func CreateWorkHandle(arg WorkCreate, identity define.Identity) (Work, error) {
 		CreatedAt:   createdAt,
 	}
 
-	// TODO input result value
 	return result, nil
 }
