@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strings"
 	"errors"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -130,29 +131,36 @@ func UpdateWorkByID(work WorkUpdate) error {
 	}
 
 	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
+	var updateExpression = "SET "
 
 	if work.UserID != nil {
-		expressionAttributeValues["userId"] = &dynamodb.AttributeValue{S: aws.String(*work.UserID)}
+		expressionAttributeValues[":userId"] = &dynamodb.AttributeValue{S: aws.String(*work.UserID)}
+		updateExpression += "userId = :userId, "
 	}
 
 	if work.Title != nil {
-		expressionAttributeValues["title"] = &dynamodb.AttributeValue{S: aws.String(*work.Title)}
+		expressionAttributeValues[":title"] = &dynamodb.AttributeValue{S: aws.String(*work.Title)}
+		updateExpression += "title = :title, "
 	}
 
 	if work.Tags != nil {
-		expressionAttributeValues["tags"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.Tags)}
+		expressionAttributeValues[":tags"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.Tags)}
+		updateExpression += "tags = :tags, "
 	}
 
 	if work.ImageURI != nil {
-		expressionAttributeValues["imageUri"] = &dynamodb.AttributeValue{S: aws.String(*work.ImageURI)}
+		expressionAttributeValues[":imageUri"] = &dynamodb.AttributeValue{S: aws.String(*work.ImageURI)}
+		updateExpression += "imageUri = :imageUri, "
 	}
 
 	if work.Description != nil {
-		expressionAttributeValues["description"] = &dynamodb.AttributeValue{S: aws.String(*work.Description)}
+		expressionAttributeValues[":description"] = &dynamodb.AttributeValue{S: aws.String(*work.Description)}
+		updateExpression += "description = :description, "
 	}
 
 	if work.CreatedAt != nil {
-		expressionAttributeValues["createdAt"] = &dynamodb.AttributeValue{N: aws.String(string(*work.CreatedAt))}
+		expressionAttributeValues[":createdAt"] = &dynamodb.AttributeValue{N: aws.String(string(*work.CreatedAt))}
+		updateExpression += "createdAt = :createdAt, "
 	}
 
 	input := &dynamodb.UpdateItemInput{
@@ -164,7 +172,7 @@ func UpdateWorkByID(work WorkUpdate) error {
 			},
 		},
 		ReturnValues:     aws.String("UPDATED_NEW"),
-		UpdateExpression: aws.String(""),
+		UpdateExpression: aws.String(strings.TrimRight(updateExpression, ", ")),
 	}
 
 	_, err = svc.UpdateItem(input)

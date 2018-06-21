@@ -1,6 +1,7 @@
 package model
 
 import (
+	"strings"
 	"errors"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -129,25 +130,31 @@ func UpdateUserByID(user UserUpdate) error {
 	}
 
 	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
+	var updateExpression = "SET "
 
 	if user.Email != nil {
-		expressionAttributeValues["email"] = &dynamodb.AttributeValue{S: aws.String(*user.Email)}
+		expressionAttributeValues[":email"] = &dynamodb.AttributeValue{S: aws.String(*user.Email)}
+		updateExpression += "email = :email, "
 	}
 
 	if user.Name != nil {
-		expressionAttributeValues["name"] = &dynamodb.AttributeValue{S: aws.String(*user.Name)}
+		expressionAttributeValues[":name"] = &dynamodb.AttributeValue{S: aws.String(*user.Name)}
+		updateExpression += "name = :name, "
 	}
 
 	if user.Career != nil {
-		expressionAttributeValues["career"] = &dynamodb.AttributeValue{S: aws.String(*user.Career)}
+		expressionAttributeValues[":career"] = &dynamodb.AttributeValue{S: aws.String(*user.Career)}
+		updateExpression += "career = :career, "
 	}
 
 	if user.AvatarURI != nil {
-		expressionAttributeValues["avatarUri"] = &dynamodb.AttributeValue{S: aws.String(*user.AvatarURI)}
+		expressionAttributeValues[":avatarUri"] = &dynamodb.AttributeValue{S: aws.String(*user.AvatarURI)}
+		updateExpression += "avatarUri = :avatarUri, "
 	}
 
 	if user.Message != nil {
-		expressionAttributeValues["message"] = &dynamodb.AttributeValue{S: aws.String(*user.Message)}
+		expressionAttributeValues[":message"] = &dynamodb.AttributeValue{S: aws.String(*user.Message)}
+		updateExpression += "message = :message, "
 	}
 
 	input := &dynamodb.UpdateItemInput{
@@ -159,7 +166,7 @@ func UpdateUserByID(user UserUpdate) error {
 			},
 		},
 		ReturnValues:     aws.String("UPDATED_NEW"),
-		UpdateExpression: aws.String(""),
+		UpdateExpression: aws.String(strings.TrimRight(updateExpression, ", ")),
 	}
 
 	_, err = svc.UpdateItem(input)
