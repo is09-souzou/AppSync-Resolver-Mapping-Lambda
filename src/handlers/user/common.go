@@ -4,7 +4,7 @@ package user
 type User struct {
 	ID          string  `json:"id"`
 	Email       string  `json:"email"`
-	DisplayName string  `json:"name"`
+	DisplayName string  `json:"displayName"`
 	Career      *string `json:"career"`
 	AvatarURI   *string `json:"avatarUri"`
 	Message     *string `json:"message"`
@@ -13,7 +13,7 @@ type User struct {
 // UserCreateBase UserCreate user struct
 type UserCreateBase struct {
 	Email       string  `json:"email"`
-	DisplayName string  `json:"name"`
+	DisplayName string  `json:"displayName"`
 	Career      *string `json:"career"`
 	AvatarURI   *string `json:"avatarUri"`
 	Message     *string `json:"message"`
@@ -28,7 +28,7 @@ type UserCreate struct {
 type UserUpdateBase struct {
 	ID          string  `json:"id"`
 	Email       *string `json:"email"`
-	DisplayName *string `json:"name"`
+	DisplayName *string `json:"displayName"`
 	Career      *string `json:"career"`
 	AvatarURI   *string `json:"avatarUri"`
 	Message     *string `json:"message"`
