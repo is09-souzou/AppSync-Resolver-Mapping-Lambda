@@ -11,12 +11,12 @@ import (
 func CreateUserHandle(arg UserCreate, identity types.Identity) (User, error) {
 
 	err := model.CreateUser(model.UserCreate{
-		ID:          identity.Sub,
-		Email:       arg.User.Email,
-		DisplayName: arg.User.DisplayName,
-		Career:      arg.User.Career,
-		AvatarURI:   arg.User.AvatarURI,
-		Message:     arg.User.Message,
+		ID:        identity.Sub,
+		Email:     arg.User.Email,
+		Name:      arg.User.Name,
+		Career:    arg.User.Career,
+		AvatarURI: arg.User.AvatarURI,
+		Message:   arg.User.Message,
 	})
 
 	if err != nil {
@@ -26,12 +26,12 @@ func CreateUserHandle(arg UserCreate, identity types.Identity) (User, error) {
 	}
 
 	result := User{
-		ID:          identity.Sub,
-		Email:       arg.User.Email,
-		DisplayName: arg.User.DisplayName,
-		Career:      arg.User.Career,
-		AvatarURI:   arg.User.AvatarURI,
-		Message:     arg.User.Message,
+		ID:        identity.Sub,
+		Email:     arg.User.Email,
+		Name:      arg.User.Name,
+		Career:    arg.User.Career,
+		AvatarURI: arg.User.AvatarURI,
+		Message:   arg.User.Message,
 	}
 
 	return result, nil

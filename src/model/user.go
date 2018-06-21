@@ -2,7 +2,6 @@ package model
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -176,13 +175,9 @@ func UpdateUserByID(user UserUpdate) (User, error) {
 		return User{}, err
 	}
 
-	fmt.Print(result)
-
 	item := User{}
 
 	err = dynamodbattribute.UnmarshalMap(result.Attributes, &item)
-
-	fmt.Printf("items: %+v", item)
 
 	if err != nil {
 		return User{}, err
