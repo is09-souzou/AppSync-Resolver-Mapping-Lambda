@@ -20,10 +20,18 @@ func Router(payload define.Payload) (interface{}, error) {
 		var p user.UserDelete
 		json.Unmarshal(payload.Arguments, &p)
 		return user.DeleteUserHandle(p, payload.Identity)
+	case "updateUser":
+		var p user.UserUpdate
+		json.Unmarshal(payload.Arguments, &p)
+		return user.UpdateUserHandle(p, payload.Identity)
 	case "createWork":
 		var p work.WorkCreate
 		json.Unmarshal(payload.Arguments, &p)
 		return work.CreateWorkHandle(p, payload.Identity)
+	case "deleteWork":
+		var p work.WorkDelete
+		json.Unmarshal(payload.Arguments, &p)
+		return work.DeleteWorkHandle(p, payload.Identity)
 	case "updateWork":
 		var p work.WorkUpdate
 		json.Unmarshal(payload.Arguments, &p)

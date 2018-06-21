@@ -8,9 +8,9 @@ import (
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
 )
 
-// UpdateWorkHandle Update Work Handle
+// UpdateUserHandle Update User Handle
 // Can update only oneself
-func UpdateWorkHandle(arg UserUpdate, identity define.Identity) (User, error) {
+func UpdateUserHandle(arg UserUpdate, identity define.Identity) (User, error) {
 
 	if (arg.User.ID != identity.Sub) {
 		return User{}, errors.New("Can update only oneself")
@@ -26,7 +26,7 @@ func UpdateWorkHandle(arg UserUpdate, identity define.Identity) (User, error) {
 	})
 
 	if err != nil {
-		fmt.Println("Got error calling UpdateWorkHandle:")
+		fmt.Println("Got error calling UpdateUserHandle:")
 		fmt.Println(err.Error())
 		return User{}, err
 	}

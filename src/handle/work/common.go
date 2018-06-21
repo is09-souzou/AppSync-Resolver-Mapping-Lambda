@@ -39,3 +39,8 @@ type WorkUpdateBase struct {
 type WorkUpdate struct {
 	Work WorkUpdateBase `json:"work"`
 }
+
+// WorkDelete delete work struct
+type WorkDelete struct {
+	ID string `json:"id"`
+}
