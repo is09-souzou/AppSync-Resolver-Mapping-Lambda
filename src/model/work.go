@@ -1,8 +1,8 @@
 package model
 
 import (
-	"strings"
 	"errors"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -118,20 +118,20 @@ func GetWorkList() ([]Work, error) {
 }
 
 // UpdateWorkByID Update work By ID to DynamoDB
-func UpdateWorkByID(work WorkUpdate) error {
+func UpdateWorkByID(work WorkUpdate) (Work, error) {
 
 	svc, err := getSVC()
 
 	if err != nil {
-		return err
+		return Work{}, err
 	}
 
 	if work.UserID == nil && work.Title == nil && work.Tags == nil && work.ImageURI == nil && work.Description == nil && work.CreatedAt == nil {
-		return errors.New("required new value")
+		return Work{}, errors.New("required new value")
 	}
 
-	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
-	var updateExpression = "SET "
+	expressionAttributeValues := map[string]*dynamodb.AttributeValue{}
+	updateExpression := "SET "
 
 	if work.UserID != nil {
 		expressionAttributeValues[":userId"] = &dynamodb.AttributeValue{S: aws.String(*work.UserID)}
@@ -171,17 +171,25 @@ func UpdateWorkByID(work WorkUpdate) error {
 				S: aws.String(work.ID),
 			},
 		},
-		ReturnValues:     aws.String("UPDATED_NEW"),
+		ReturnValues:     aws.String("ALL_NEW"),
 		UpdateExpression: aws.String(strings.TrimRight(updateExpression, ", ")),
 	}
 
-	_, err = svc.UpdateItem(input)
+	result, err := svc.UpdateItem(input)
 
 	if err != nil {
-		return err
+		return Work{}, err
 	}
 
-	return nil
+	item := Work{}
+
+	err = dynamodbattribute.UnmarshalMap(result.Attributes, &item)
+
+	if err != nil {
+		return Work{}, err
+	}
+
+	return item, nil
 }
 
 // DeleteWorkByID Delete DynamoDB work By ID

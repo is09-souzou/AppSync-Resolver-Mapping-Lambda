@@ -22,32 +22,32 @@ func getSVC() (*dynamodb.DynamoDB, error) {
 
 // User DynamoDB Resut User Struct
 type User struct {
-	ID        string
-	Email     string
-	Name      string
-	Career    *string
-	AvatarURI *string
-	Message   *string
+	ID          string
+	Email       string
+	DisplayName string
+	Career      *string
+	AvatarURI   *string
+	Message     *string
 }
 
 // UserCreate DynamoDB Create User Struct
 type UserCreate struct {
-	ID        string
-	Email     string
-	Name      string
-	Career    *string
-	AvatarURI *string
-	Message   *string
+	ID          string
+	Email       string
+	DisplayName string
+	Career      *string
+	AvatarURI   *string
+	Message     *string
 }
 
 // UserUpdate DynamoDB Update User Struct
 type UserUpdate struct {
-	ID        string
-	Email     *string
-	Name      *string
-	Career    *string
-	AvatarURI *string
-	Message   *string
+	ID          string
+	Email       *string
+	DisplayName *string
+	Career      *string
+	AvatarURI   *string
+	Message     *string
 }
 
 // Work DynamoDB Result Work Struct
@@ -55,7 +55,7 @@ type Work struct {
 	ID          string
 	UserID      string
 	Title       string
-	Tags        []string
+	Tags        *[]string
 	ImageURI    string
 	Description string
 	CreatedAt   string

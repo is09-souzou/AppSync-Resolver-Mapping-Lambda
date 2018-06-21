@@ -1,8 +1,9 @@
 package model
 
 import (
-	"strings"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -28,8 +29,8 @@ func CreateUser(user UserCreate) error {
 		"email": {
 			S: aws.String(user.Email),
 		},
-		"name": {
-			S: aws.String(user.Name),
+		"displayName": {
+			S: aws.String(user.DisplayName),
 		},
 	}
 
@@ -117,29 +118,29 @@ func GetUserList() ([]User, error) {
 }
 
 // UpdateUserByID Update user By ID to DynamoDB
-func UpdateUserByID(user UserUpdate) error {
+func UpdateUserByID(user UserUpdate) (User, error) {
 
 	svc, err := getSVC()
 
 	if err != nil {
-		return err
+		return User{}, err
 	}
 
-	if user.Email == nil && user.Name == nil && user.Career == nil && user.AvatarURI == nil && user.Message == nil {
-		return errors.New("required new value")
+	if user.Email == nil && user.DisplayName == nil && user.Career == nil && user.AvatarURI == nil && user.Message == nil {
+		return User{}, errors.New("required new value")
 	}
 
-	var expressionAttributeValues = map[string]*dynamodb.AttributeValue{}
-	var updateExpression = "SET "
+	expressionAttributeValues := map[string]*dynamodb.AttributeValue{}
+	updateExpression := "SET "
 
 	if user.Email != nil {
 		expressionAttributeValues[":email"] = &dynamodb.AttributeValue{S: aws.String(*user.Email)}
 		updateExpression += "email = :email, "
 	}
 
-	if user.Name != nil {
-		expressionAttributeValues[":name"] = &dynamodb.AttributeValue{S: aws.String(*user.Name)}
-		updateExpression += "name = :name, "
+	if user.DisplayName != nil {
+		expressionAttributeValues[":displayName"] = &dynamodb.AttributeValue{S: aws.String(*user.DisplayName)}
+		updateExpression += "displayName = :displayName, "
 	}
 
 	if user.Career != nil {
@@ -165,17 +166,29 @@ func UpdateUserByID(user UserUpdate) error {
 				S: aws.String(user.ID),
 			},
 		},
-		ReturnValues:     aws.String("UPDATED_NEW"),
+		ReturnValues:     aws.String("ALL_NEW"),
 		UpdateExpression: aws.String(strings.TrimRight(updateExpression, ", ")),
 	}
 
-	_, err = svc.UpdateItem(input)
+	result, err := svc.UpdateItem(input)
 
 	if err != nil {
-		return err
+		return User{}, err
 	}
 
-	return nil
+	fmt.Print(result)
+
+	item := User{}
+
+	err = dynamodbattribute.UnmarshalMap(result.Attributes, &item)
+
+	fmt.Printf("items: %+v", item)
+
+	if err != nil {
+		return User{}, err
+	}
+
+	return item, nil
 }
 
 // DeleteUserByID Delete DynamoDB user By ID

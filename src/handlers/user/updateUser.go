@@ -16,13 +16,13 @@ func UpdateUserHandle(arg UserUpdate, identity types.Identity) (User, error) {
 		return User{}, errors.New("Can update only oneself")
 	}
 
-	err := model.UpdateUserByID(model.UserUpdate{
-		ID:        identity.Sub,
-		Email:     arg.User.Email,
-		Name:      arg.User.Name,
-		Career:    arg.User.Career,
-		AvatarURI: arg.User.AvatarURI,
-		Message:   arg.User.Message,
+	newUser, err := model.UpdateUserByID(model.UserUpdate{
+		ID:          identity.Sub,
+		Email:       arg.User.Email,
+		DisplayName: arg.User.DisplayName,
+		Career:      arg.User.Career,
+		AvatarURI:   arg.User.AvatarURI,
+		Message:     arg.User.Message,
 	})
 
 	if err != nil {
@@ -31,15 +31,13 @@ func UpdateUserHandle(arg UserUpdate, identity types.Identity) (User, error) {
 		return User{}, err
 	}
 
-	user, err := model.GetUserByID(identity.Sub)
-
 	result := User{
-		ID:        user.ID,
-		Email:     user.Email,
-		Name:      user.Name,
-		Career:    user.Career,
-		AvatarURI: user.AvatarURI,
-		Message:   user.Message,
+		ID:          newUser.ID,
+		Email:       newUser.Email,
+		DisplayName: newUser.DisplayName,
+		Career:      newUser.Career,
+		AvatarURI:   newUser.AvatarURI,
+		Message:     newUser.Message,
 	}
 
 	return result, nil

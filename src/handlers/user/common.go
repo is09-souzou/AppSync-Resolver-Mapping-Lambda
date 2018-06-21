@@ -2,21 +2,21 @@ package user
 
 // User response user struct
 type User struct {
-	ID        string  `json:"id"`
-	Email     string  `json:"email"`
-	Name      string  `json:"name"`
-	Career    *string `json:"career"`
-	AvatarURI *string `json:"avatarUri"`
-	Message   *string `json:"message"`
+	ID          string  `json:"id"`
+	Email       string  `json:"email"`
+	DisplayName string  `json:"name"`
+	Career      *string `json:"career"`
+	AvatarURI   *string `json:"avatarUri"`
+	Message     *string `json:"message"`
 }
 
 // UserCreateBase UserCreate user struct
 type UserCreateBase struct {
-	Email     string  `json:"email"`
-	Name      string  `json:"name"`
-	Career    *string `json:"career"`
-	AvatarURI *string `json:"avatarUri"`
-	Message   *string `json:"message"`
+	Email       string  `json:"email"`
+	DisplayName string  `json:"name"`
+	Career      *string `json:"career"`
+	AvatarURI   *string `json:"avatarUri"`
+	Message     *string `json:"message"`
 }
 
 // UserCreate create user struct
@@ -26,12 +26,12 @@ type UserCreate struct {
 
 // UserUpdateBase UserUpdate user struct
 type UserUpdateBase struct {
-	ID        string  `json:"id"`
-	Email     *string `json:"email"`
-	Name      *string `json:"name"`
-	Career    *string `json:"career"`
-	AvatarURI *string `json:"avatarUri"`
-	Message   *string `json:"message"`
+	ID          string  `json:"id"`
+	Email       *string `json:"email"`
+	DisplayName *string `json:"name"`
+	Career      *string `json:"career"`
+	AvatarURI   *string `json:"avatarUri"`
+	Message     *string `json:"message"`
 }
 
 // UserUpdate create user struct
