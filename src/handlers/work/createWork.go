@@ -1,6 +1,7 @@
 package work
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -11,7 +12,11 @@ import (
 )
 
 // CreateWorkHandle Create Work Handle
+// Can create only oneself
 func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
+	if arg.Work.UserID != identity.Sub {
+		return Work{}, errors.New("Can create only oneself")
+	}
 
 	uuid, err := uuid.NewUUID()
 

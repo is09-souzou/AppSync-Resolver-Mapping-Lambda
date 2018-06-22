@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
@@ -9,7 +10,12 @@ import (
 )
 
 // DeleteUserHandle Delete User Handle
+// Can delete only oneself
 func DeleteUserHandle(arg UserDelete, identity types.Identity) (User, error) {
+	if arg.ID != identity.Sub {
+		return User{}, errors.New("Can delete only oneself")
+	}
+
 	eg := errgroup.Group{}
 
 	eg.Go(func() error { return model.DeleteUserByID(arg.ID) })
