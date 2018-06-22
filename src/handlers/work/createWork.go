@@ -1,6 +1,7 @@
 package work
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -12,6 +13,16 @@ import (
 
 // CreateWorkHandle Create Work Handle
 func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
+
+	user, err:= model.GetUserByID(identity.Sub)
+
+	if err != nil {
+		return Work{}, err
+	}
+
+	if user.ID == "" {
+		return Work{}, errors.New("User is not existed")
+	}
 
 	uuid, err := uuid.NewUUID()
 
