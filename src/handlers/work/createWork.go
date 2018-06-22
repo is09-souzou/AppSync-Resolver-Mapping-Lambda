@@ -12,7 +12,11 @@ import (
 )
 
 // CreateWorkHandle Create Work Handle
+// Can create only oneself
 func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
+	if arg.Work.UserID != identity.Sub {
+		return Work{}, errors.New("Can create only oneself")
+	}
 
 	user, err:= model.GetUserByID(identity.Sub)
 
