@@ -12,18 +12,27 @@ import (
 // Can update only oneself
 func UpdateUserHandle(arg UserUpdate, identity types.Identity) (User, error) {
 
+	svc, err := model.GetSVC()
+
+	if err != nil {
+		return User{}, err
+	}
+
 	if arg.User.ID != identity.Sub {
 		return User{}, errors.New("Can update only oneself")
 	}
 
-	newUser, err := model.UpdateUserByID(model.UserUpdate{
-		ID:          identity.Sub,
-		Email:       arg.User.Email,
-		DisplayName: arg.User.DisplayName,
-		Career:      arg.User.Career,
-		AvatarURI:   arg.User.AvatarURI,
-		Message:     arg.User.Message,
-	})
+	newUser, err := model.UpdateUserByID(
+		svc,
+		model.UserUpdate{
+			ID:          identity.Sub,
+			Email:       arg.User.Email,
+			DisplayName: arg.User.DisplayName,
+			Career:      arg.User.Career,
+			AvatarURI:   arg.User.AvatarURI,
+			Message:     arg.User.Message,
+		},
+	)
 
 	if err != nil {
 		fmt.Println("Got error calling UpdateUserHandle:")

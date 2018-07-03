@@ -13,7 +13,13 @@ import (
 // Only the principal can be update
 func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 
-	work, err := model.GetWorkByID(arg.Work.ID)
+	svc, err := model.GetSVC()
+	
+	if err != nil {
+		return Work{}, err
+	}
+
+	work, err := model.GetWorkByID(svc, arg.Work.ID)
 
 	if err != nil {
 		fmt.Println("Got error calling UpdateWorkHandle:")
@@ -25,14 +31,17 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 		return Work{}, errors.New("Only the created user can be update")
 	}
 
-	newWork, err := model.UpdateWorkByID(model.WorkUpdate{
-		ID:          arg.Work.ID,
-		UserID:      nil,
-		Title:       arg.Work.Title,
-		Tags:        arg.Work.Tags,
-		ImageURI:    arg.Work.ImageURI,
-		Description: arg.Work.Description,
-	})
+	newWork, err := model.UpdateWorkByID(
+		svc,
+			model.WorkUpdate{
+			ID:          arg.Work.ID,
+			UserID:      nil,
+			Title:       arg.Work.Title,
+			Tags:        arg.Work.Tags,
+			ImageURI:    arg.Work.ImageURI,
+			Description: arg.Work.Description,
+		},
+	)
 
 	if err != nil {
 		fmt.Println("Got error calling UpdateWorkHandle:")

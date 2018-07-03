@@ -13,13 +13,7 @@ import (
 const UserTableName = "portal-users"
 
 // CreateUser Create user to DynamoDB
-func CreateUser(user UserCreate) error {
-
-	svc, err := getSVC()
-
-	if err != nil {
-		return err
-	}
+func CreateUser(svc *dynamodb.DynamoDB, user UserCreate) error {
 
 	var item = map[string]*dynamodb.AttributeValue{
 		"id": {
@@ -50,7 +44,7 @@ func CreateUser(user UserCreate) error {
 		TableName: aws.String(UserTableName),
 	}
 
-	_, err = svc.PutItem(input)
+	_, err := svc.PutItem(input)
 
 	if err != nil {
 		return err
@@ -60,13 +54,7 @@ func CreateUser(user UserCreate) error {
 }
 
 // GetUserByID Get user by ID from DynamoDB
-func GetUserByID(id string) (User, error) {
-
-	svc, err := getSVC()
-
-	if err != nil {
-		return User{}, err
-	}
+func GetUserByID(svc *dynamodb.DynamoDB, id string) (User, error) {
 
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(UserTableName),
@@ -93,13 +81,7 @@ func GetUserByID(id string) (User, error) {
 }
 
 // GetUserList Get user list By ID from DynamoDB
-func GetUserList() ([]User, error) {
-
-	svc, err := getSVC()
-
-	if err != nil {
-		return []User{}, err
-	}
+func GetUserList(svc *dynamodb.DynamoDB) ([]User, error) {
 
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(UserTableName),
@@ -117,13 +99,7 @@ func GetUserList() ([]User, error) {
 }
 
 // UpdateUserByID Update user By ID to DynamoDB
-func UpdateUserByID(user UserUpdate) (User, error) {
-
-	svc, err := getSVC()
-
-	if err != nil {
-		return User{}, err
-	}
+func UpdateUserByID(svc *dynamodb.DynamoDB, user UserUpdate) (User, error) {
 
 	if user.Email == nil && user.DisplayName == nil && user.Career == nil && user.AvatarURI == nil && user.Message == nil {
 		return User{}, errors.New("required new value")
@@ -187,13 +163,7 @@ func UpdateUserByID(user UserUpdate) (User, error) {
 }
 
 // DeleteUserByID Delete DynamoDB user By ID
-func DeleteUserByID(id string) error {
-
-	svc, err := getSVC()
-
-	if err != nil {
-		return err
-	}
+func DeleteUserByID(svc *dynamodb.DynamoDB, id string) error {
 
 	input := &dynamodb.DeleteItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
@@ -204,7 +174,7 @@ func DeleteUserByID(id string) error {
 		TableName: aws.String(UserTableName),
 	}
 
-	_, err = svc.DeleteItem(input)
+	_, err := svc.DeleteItem(input)
 
 	if err != nil {
 		return err

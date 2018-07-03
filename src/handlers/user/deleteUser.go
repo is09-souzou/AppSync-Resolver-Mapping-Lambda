@@ -18,8 +18,14 @@ func DeleteUserHandle(arg UserDelete, identity types.Identity) (User, error) {
 
 	eg := errgroup.Group{}
 
-	eg.Go(func() error { return model.DeleteUserByID(arg.ID) })
-	eg.Go(func() error { return model.DeleteWorkByUserID(arg.ID) })
+	svc, err := model.GetSVC()
+
+	if err != nil {
+		return User{}, err
+	}
+
+	eg.Go(func() error { return model.DeleteUserByID(svc, arg.ID) })
+	eg.Go(func() error { return model.DeleteWorkByUserID(svc, arg.ID) })
 
 	if err := eg.Wait(); err != nil {
 		fmt.Println("Got error calling DeleteUserHandle:")
