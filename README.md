@@ -1,4 +1,4 @@
-# AppSync-Delete-User-Function
+# AppSync-Resolver-Mapping-Lambda
 
 ## How to start
 ```bash

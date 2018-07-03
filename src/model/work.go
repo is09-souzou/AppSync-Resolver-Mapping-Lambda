@@ -14,13 +14,7 @@ import (
 const WorkTableName = "portal-works"
 
 // CreateWork Create work to DynamoDB
-func CreateWork(work WorkCreate) error {
-
-	svc, err := getSVC()
-
-	if err != nil {
-		return err
-	}
+func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 
 	var item = map[string]*dynamodb.AttributeValue{
 		"id": {
@@ -52,7 +46,7 @@ func CreateWork(work WorkCreate) error {
 		TableName: aws.String(WorkTableName),
 	}
 
-	_, err = svc.PutItem(input)
+	_, err := svc.PutItem(input)
 
 	if err != nil {
 		return err
@@ -62,13 +56,7 @@ func CreateWork(work WorkCreate) error {
 }
 
 // GetWorkByID Get work by ID from DynamoDB
-func GetWorkByID(id string) (Work, error) {
-
-	svc, err := getSVC()
-
-	if err != nil {
-		return Work{}, err
-	}
+func GetWorkByID(svc *dynamodb.DynamoDB, id string) (Work, error) {
 
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(WorkTableName),
@@ -95,13 +83,7 @@ func GetWorkByID(id string) (Work, error) {
 }
 
 // GetWorkList Get work list By ID from DynamoDB
-func GetWorkList() ([]Work, error) {
-
-	svc, err := getSVC()
-
-	if err != nil {
-		return []Work{}, err
-	}
+func GetWorkList(svc *dynamodb.DynamoDB) ([]Work, error) {
 
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(WorkTableName),
@@ -119,13 +101,7 @@ func GetWorkList() ([]Work, error) {
 }
 
 // UpdateWorkByID Update work By ID to DynamoDB
-func UpdateWorkByID(work WorkUpdate) (Work, error) {
-
-	svc, err := getSVC()
-
-	if err != nil {
-		return Work{}, err
-	}
+func UpdateWorkByID(svc *dynamodb.DynamoDB, work WorkUpdate) (Work, error) {
 
 	if work.UserID == nil && work.Title == nil && work.Tags == nil && work.ImageURI == nil && work.Description == nil && work.CreatedAt == nil {
 		return Work{}, errors.New("required new value")
@@ -194,13 +170,7 @@ func UpdateWorkByID(work WorkUpdate) (Work, error) {
 }
 
 // DeleteWorkByID Delete DynamoDB work By ID
-func DeleteWorkByID(id string) error {
-
-	svc, err := getSVC()
-
-	if err != nil {
-		return err
-	}
+func DeleteWorkByID(svc *dynamodb.DynamoDB, id string) error {
 
 	input := &dynamodb.DeleteItemInput{
 		Key: map[string]*dynamodb.AttributeValue{
@@ -211,7 +181,7 @@ func DeleteWorkByID(id string) error {
 		TableName: aws.String(WorkTableName),
 	}
 
-	_, err = svc.DeleteItem(input)
+	_, err := svc.DeleteItem(input)
 
 	if err != nil {
 		return err
@@ -222,13 +192,8 @@ func DeleteWorkByID(id string) error {
 }
 
 // DeleteWorkByUserID Delete DynamoDB work By UserID
-func DeleteWorkByUserID(userID string) error {
+func DeleteWorkByUserID(svc *dynamodb.DynamoDB, userID string) error {
 
-	svc, err := getSVC()
-
-	if err != nil {
-		return err
-	}
 	filt := expression.Name("userId").Equal(expression.Value(userID))
 
 	expr, err := expression.NewBuilder().WithFilter(filt).Build()

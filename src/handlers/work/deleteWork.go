@@ -11,7 +11,14 @@ import (
 // DeleteWorkHandle Delete User Handle
 // Can delete only oneself
 func DeleteWorkHandle(arg WorkDelete, identity types.Identity) (Work, error) {
-	work, err := model.GetWorkByID(arg.ID)
+
+	svc, err := model.GetSVC()
+
+	if err != nil {
+		return Work{}, err
+	}
+
+	work, err := model.GetWorkByID(svc, arg.ID)
 
 	if err != nil {
 		return Work{}, err
@@ -21,7 +28,7 @@ func DeleteWorkHandle(arg WorkDelete, identity types.Identity) (Work, error) {
 		return Work{}, errors.New("Can delete only oneself")
 	}
 
-	err = model.DeleteWorkByID(arg.ID)
+	err = model.DeleteWorkByID(svc, arg.ID)
 
 	if err != nil {
 		fmt.Println("Got error calling DeleteUserHandle:")

@@ -18,7 +18,13 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 		return Work{}, errors.New("Can create only oneself")
 	}
 
-	user, err:= model.GetUserByID(identity.Sub)
+	svc, err := model.GetSVC()
+
+	if err != nil {
+		return Work{}, err
+	}
+
+	user, err := model.GetUserByID(svc, identity.Sub)
 
 	if err != nil {
 		return Work{}, err
@@ -37,15 +43,18 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 	id := uuid.String()
 	createdAt := time.Now().Unix()
 
-	if err := model.CreateWork(model.WorkCreate{
-		ID:          id,
-		UserID:      arg.Work.UserID,
-		Title:       arg.Work.Title,
-		Tags:        arg.Work.Tags,
-		ImageURI:    arg.Work.ImageURI,
-		Description: arg.Work.Description,
-		CreatedAt:   fmt.Sprint(createdAt),
-	}); err != nil {
+	if err := model.CreateWork(
+		svc,
+		model.WorkCreate{
+			ID:          id,
+			UserID:      arg.Work.UserID,
+			Title:       arg.Work.Title,
+			Tags:        arg.Work.Tags,
+			ImageURI:    arg.Work.ImageURI,
+			Description: arg.Work.Description,
+			CreatedAt:   fmt.Sprint(createdAt),
+		},
+	); err != nil {
 		fmt.Println("Got error calling CreateWorkHandle:")
 		fmt.Println(err.Error())
 		return Work{}, err
