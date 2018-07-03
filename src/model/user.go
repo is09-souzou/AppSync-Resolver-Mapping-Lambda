@@ -15,8 +15,8 @@ const UserTableName = "portal-users"
 // CreateUser Create user to DynamoDB
 func CreateUser(svc *dynamodb.DynamoDB, user UserCreate) error {
 
-	if user.ID == "" || user.Email == "" || user.DisplayName == "" {
-		return errors.New("Cannot insert empty string")
+	if user.ID == "" {
+		return errors.New("required ID in user")
 	}
 
 	var item = map[string]*dynamodb.AttributeValue{
@@ -31,15 +31,24 @@ func CreateUser(svc *dynamodb.DynamoDB, user UserCreate) error {
 		},
 	}
 
-	if user.Career != nil && *user.Career != "" {
+	if user.Career != nil {
+		if *user.Career == "" {
+			*user.Career = " "
+		}
 		item["career"] = &dynamodb.AttributeValue{S: aws.String(*user.Career)}
 	}
 
-	if user.AvatarURI != nil && *user.AvatarURI != "" {
+	if user.AvatarURI != nil {
+		if *user.AvatarURI == "" {
+			*user.AvatarURI = " "
+		}
 		item["avatarUri"] = &dynamodb.AttributeValue{S: aws.String(*user.AvatarURI)}
 	}
 
-	if user.Message != nil && *user.Message != "" {
+	if user.Message != nil {
+		if *user.Message == "" {
+			*user.Message = " "
+		}
 		item["message"] = &dynamodb.AttributeValue{S: aws.String(*user.Message)}
 	}
 
@@ -112,27 +121,42 @@ func UpdateUserByID(svc *dynamodb.DynamoDB, user UserUpdate) (User, error) {
 	expressionAttributeValues := map[string]*dynamodb.AttributeValue{}
 	updateExpression := "SET "
 
-	if user.Email != nil && *user.Email != "" {
+	if user.Email != nil {
+		if *user.Email == "" {
+			*user.Message = " "
+		}
 		expressionAttributeValues[":email"] = &dynamodb.AttributeValue{S: aws.String(*user.Email)}
 		updateExpression += "email = :email, "
 	}
 
-	if user.DisplayName != nil && *user.DisplayName != "" {
+	if user.DisplayName != nil {
+		if *user.DisplayName == "" {
+			*user.DisplayName = " "
+		}
 		expressionAttributeValues[":displayName"] = &dynamodb.AttributeValue{S: aws.String(*user.DisplayName)}
 		updateExpression += "displayName = :displayName, "
 	}
 
-	if user.Career != nil && *user.Career != "" {
+	if user.Career != nil {
+		if *user.Career == "" {
+			*user.Career = " "
+		}
 		expressionAttributeValues[":career"] = &dynamodb.AttributeValue{S: aws.String(*user.Career)}
 		updateExpression += "career = :career, "
 	}
 
-	if user.AvatarURI != nil && *user.AvatarURI != "" {
+	if user.AvatarURI != nil {
+		if *user.AvatarURI == "" {
+			*user.AvatarURI = " "
+		}
 		expressionAttributeValues[":avatarUri"] = &dynamodb.AttributeValue{S: aws.String(*user.AvatarURI)}
 		updateExpression += "avatarUri = :avatarUri, "
 	}
 
-	if user.Message != nil && *user.Message != "" {
+	if user.Message != nil {
+		if *user.Message == "" {
+			*user.Message = " "
+		}
 		expressionAttributeValues[":message"] = &dynamodb.AttributeValue{S: aws.String(*user.Message)}
 		updateExpression += "message = :message, "
 	}
