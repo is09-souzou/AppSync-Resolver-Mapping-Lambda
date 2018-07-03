@@ -16,8 +16,32 @@ const WorkTableName = "portal-works"
 // CreateWork Create work to DynamoDB
 func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 
-	if work.UserID == "" || work.Title == "" || work.ImageURI == "" && work.Description == "" && work.CreatedAt == "" {
-		return errors.New("Cannot insert empty string")
+	if work.ID == "" {
+		return errors.New("required ID in work")
+	}
+
+	if work.UserID == "" {
+		work.UserID = " "
+	}
+
+	if work.Title == "" {
+		work.Title = " "
+	}
+
+	if work.UserID == "" {
+		work.UserID = " "
+	}
+
+	if work.ImageURI == "" {
+		work.ImageURI = " "
+	}
+
+	if work.Description == "" {
+		work.Description = " "
+	}
+
+	if work.CreatedAt == "" {
+		work.CreatedAt = " "
 	}
 
 	var item = map[string]*dynamodb.AttributeValue{
@@ -114,12 +138,18 @@ func UpdateWorkByID(svc *dynamodb.DynamoDB, work WorkUpdate) (Work, error) {
 	expressionAttributeValues := map[string]*dynamodb.AttributeValue{}
 	updateExpression := "SET "
 
-	if work.UserID != nil && *work.UserID != "" {
+	if work.UserID != nil {
+		if *work.UserID == "" {
+			*work.UserID = " "
+		}
 		expressionAttributeValues[":userId"] = &dynamodb.AttributeValue{S: aws.String(*work.UserID)}
 		updateExpression += "userId = :userId, "
 	}
 
-	if work.Title != nil && *work.Title != "" {
+	if work.Title != nil {
+		if *work.Title == "" {
+			*work.Title = " "
+		}
 		expressionAttributeValues[":title"] = &dynamodb.AttributeValue{S: aws.String(*work.Title)}
 		updateExpression += "title = :title, "
 	}
@@ -129,17 +159,26 @@ func UpdateWorkByID(svc *dynamodb.DynamoDB, work WorkUpdate) (Work, error) {
 		updateExpression += "tags = :tags, "
 	}
 
-	if work.ImageURI != nil && *work.ImageURI != "" {
+	if work.ImageURI != nil {
+		if *work.ImageURI == "" {
+			*work.ImageURI = " "
+		}
 		expressionAttributeValues[":imageUri"] = &dynamodb.AttributeValue{S: aws.String(*work.ImageURI)}
 		updateExpression += "imageUri = :imageUri, "
 	}
 
-	if work.Description != nil && *work.Description != "" {
+	if work.Description != nil {
+		if *work.Description == "" {
+			*work.Description = " "
+		}
 		expressionAttributeValues[":description"] = &dynamodb.AttributeValue{S: aws.String(*work.Description)}
 		updateExpression += "description = :description, "
 	}
 
-	if work.CreatedAt != nil && *work.CreatedAt != "" {
+	if work.CreatedAt != nil {
+		if *work.CreatedAt == "" {
+			*work.CreatedAt = " "
+		}
 		expressionAttributeValues[":createdAt"] = &dynamodb.AttributeValue{N: aws.String(string(*work.CreatedAt))}
 		updateExpression += "createdAt = :createdAt, "
 	}
