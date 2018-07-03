@@ -15,6 +15,10 @@ const UserTableName = "portal-users"
 // CreateUser Create user to DynamoDB
 func CreateUser(svc *dynamodb.DynamoDB, user UserCreate) error {
 
+	if user.ID == "" || user.Email == "" || user.DisplayName == "" {
+		return errors.New("Cannot insert empty string")
+	}
+
 	var item = map[string]*dynamodb.AttributeValue{
 		"id": {
 			S: aws.String(user.ID),
