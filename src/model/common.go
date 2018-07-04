@@ -23,7 +23,7 @@ func GetSVC() (*dynamodb.DynamoDB, error) {
 // User DynamoDB Resut User Struct
 type User struct {
 	ID          string
-	Email       string
+	Email       *string
 	DisplayName string
 	Career      *string
 	AvatarURI   *string
@@ -33,7 +33,7 @@ type User struct {
 // UserCreate DynamoDB Create User Struct
 type UserCreate struct {
 	ID          string
-	Email       string
+	Email       *string
 	DisplayName string
 	Career      *string
 	AvatarURI   *string

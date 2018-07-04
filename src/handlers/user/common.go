@@ -3,7 +3,7 @@ package user
 // User response user struct
 type User struct {
 	ID          string  `json:"id"`
-	Email       string  `json:"email"`
+	Email       *string  `json:"email"`
 	DisplayName string  `json:"displayName"`
 	Career      *string `json:"career"`
 	AvatarURI   *string `json:"avatarUri"`
@@ -12,7 +12,7 @@ type User struct {
 
 // UserCreateBase UserCreate user struct
 type UserCreateBase struct {
-	Email       string  `json:"email"`
+	Email       *string  `json:"email"`
 	DisplayName string  `json:"displayName"`
 	Career      *string `json:"career"`
 	AvatarURI   *string `json:"avatarUri"`

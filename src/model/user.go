@@ -24,7 +24,7 @@ func CreateUser(svc *dynamodb.DynamoDB, user UserCreate) error {
 			S: aws.String(user.ID),
 		},
 		"email": {
-			S: aws.String(user.Email),
+			S: aws.String(*user.Email),
 		},
 		"displayName": {
 			S: aws.String(user.DisplayName),
