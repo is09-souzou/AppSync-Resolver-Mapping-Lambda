@@ -14,7 +14,7 @@ import (
 func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 
 	svc, err := model.GetSVC()
-	
+
 	if err != nil {
 		return Work{}, err
 	}
@@ -33,7 +33,7 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 
 	newWork, err := model.UpdateWorkByID(
 		svc,
-			model.WorkUpdate{
+		model.WorkUpdate{
 			ID:          arg.Work.ID,
 			UserID:      nil,
 			Title:       arg.Work.Title,

@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 )
 
+// GetSVC get DynamoDB SVC
 func GetSVC() (*dynamodb.DynamoDB, error) {
 	session, err := session.NewSession(
 		&aws.Config{Region: aws.String("ap-northeast-1")},
