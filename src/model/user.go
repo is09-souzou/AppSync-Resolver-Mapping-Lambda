@@ -23,12 +23,16 @@ func CreateUser(svc *dynamodb.DynamoDB, user UserCreate) error {
 		"id": {
 			S: aws.String(user.ID),
 		},
-		"email": {
-			S: aws.String(*user.Email),
-		},
 		"displayName": {
 			S: aws.String(user.DisplayName),
 		},
+	}
+
+	if user.Email != nil {
+		if *user.Email == "" {
+			*user.Email = " "
+		}
+		item["email"] = &dynamodb.AttributeValue{S: aws.String(*user.Email)}
 	}
 
 	if user.Career != nil {
@@ -123,7 +127,7 @@ func UpdateUserByID(svc *dynamodb.DynamoDB, user UserUpdate) (User, error) {
 
 	if user.Email != nil {
 		if *user.Email == "" {
-			*user.Message = " "
+			*user.Email = " "
 		}
 		expressionAttributeValues[":email"] = &dynamodb.AttributeValue{S: aws.String(*user.Email)}
 		updateExpression += "email = :email, "
