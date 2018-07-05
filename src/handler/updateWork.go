@@ -1,4 +1,4 @@
-package work
+package handler
 
 import (
 	"errors"
@@ -8,6 +8,21 @@ import (
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 )
+
+// WorkUpdateBase WorkUpdate work struct
+type WorkUpdateBase struct {
+	ID          string    `json:"id"`
+	UserID      *string   `json:"userId"`
+	Title       *string   `json:"title"`
+	Tags        *[]string `json:"tags"`
+	ImageURI    *string   `json:"imageUri"`
+	Description *string   `json:"description"`
+}
+
+// WorkUpdate update work struct
+type WorkUpdate struct {
+	Work WorkUpdateBase `json:"work"`
+}
 
 // UpdateWorkHandle Update Work Handle
 // Only the principal can be update

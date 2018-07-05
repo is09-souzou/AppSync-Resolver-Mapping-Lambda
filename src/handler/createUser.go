@@ -1,4 +1,4 @@
-package user
+package handler
 
 import (
 	"fmt"
@@ -6,6 +6,20 @@ import (
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 )
+
+// UserCreateBase UserCreate user struct
+type UserCreateBase struct {
+	Email       *string `json:"email"`
+	DisplayName string  `json:"displayName"`
+	Career      *string `json:"career"`
+	AvatarURI   *string `json:"avatarUri"`
+	Message     *string `json:"message"`
+}
+
+// UserCreate create user struct
+type UserCreate struct {
+	User UserCreateBase `json:"user"`
+}
 
 // CreateUserHandle Create User Handle
 func CreateUserHandle(arg UserCreate, identity types.Identity) (User, error) {

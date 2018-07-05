@@ -1,4 +1,4 @@
-package work
+package handler
 
 import (
 	"errors"
@@ -10,6 +10,20 @@ import (
 	"github.com/google/uuid"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
 )
+
+// WorkCreateBase WorkCreate work struct
+type WorkCreateBase struct {
+	UserID      string    `json:"userId"`
+	Title       string    `json:"title"`
+	Tags        *[]string `json:"tags"`
+	ImageURI    string    `json:"imageUri"`
+	Description string    `json:"description"`
+}
+
+// WorkCreate create work struct
+type WorkCreate struct {
+	Work WorkCreateBase `json:"work"`
+}
 
 // CreateWorkHandle Create Work Handle
 // Can create only oneself

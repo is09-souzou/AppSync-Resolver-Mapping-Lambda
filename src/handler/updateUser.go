@@ -1,4 +1,4 @@
-package user
+package handler
 
 import (
 	"errors"
@@ -7,6 +7,21 @@ import (
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 )
+
+// UserUpdateBase UserUpdate user struct
+type UserUpdateBase struct {
+	ID          string  `json:"id"`
+	Email       *string `json:"email"`
+	DisplayName *string `json:"displayName"`
+	Career      *string `json:"career"`
+	AvatarURI   *string `json:"avatarUri"`
+	Message     *string `json:"message"`
+}
+
+// UserUpdate create user struct
+type UserUpdate struct {
+	User UserUpdateBase `json:"user"`
+}
 
 // UpdateUserHandle Update User Handle
 // Can update only oneself
