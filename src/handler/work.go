@@ -10,3 +10,9 @@ type Work struct {
 	Description string    `json:"description"`
 	CreatedAt   int       `json:"createdAt"`
 }
+
+// WorkConnection response work connection struct
+type WorkConnection struct {
+	Items     []Work  `json:"items"`
+	NextToken *string `json:"nextToken"`
+}

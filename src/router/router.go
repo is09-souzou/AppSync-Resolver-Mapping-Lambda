@@ -13,7 +13,9 @@ func Router(payload types.Payload) (interface{}, error) {
 	switch payload.Field {
 	// GraphQL Queries
 	case "listWorks":
-		return nil, nil
+		var p handler.ListWorkHandle
+		json.Unmarshal(payload.Arguments, &p)
+		return handler.ListWorkHandle(p, payload.Identity)
 	// GraphQL Mutations
 	case "createUser":
 		var p handler.UserCreate
