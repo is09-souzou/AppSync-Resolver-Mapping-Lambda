@@ -10,9 +10,9 @@ import (
 
 // ListWork list work struct
 type ListWork struct {
-	Limit     *int             `json:"limit"`
-	NextToken *string          `json:"nextToken"`
-	Option    *WorkQueryOption `json:"option"`
+	Limit             *int             `json:"limit"`
+	ExclusiveStartKey *string          `json:"exclusiveStartKey"`
+	Option            *WorkQueryOption `json:"option"`
 }
 
 // WorkQueryOption work query option struct
@@ -36,7 +36,7 @@ func ListWorkHandle(arg ListWork, identity types.Identity) (WorkConnection, erro
 		limit = int64(*arg.Limit)
 	}
 
-	workList, err := model.ScanWorkList(svc, limit, arg.NextToken)
+	workList, err := model.ScanWorkList(svc, limit, arg.ExclusiveStartKey)
 
 	if err != nil {
 		fmt.Println("Got error calling ListWorkHandle:")
@@ -61,5 +61,5 @@ func ListWorkHandle(arg ListWork, identity types.Identity) (WorkConnection, erro
 		items = append(items, item)
 	}
 
-	return WorkConnection{items, workList.NextToken}, nil
+	return WorkConnection{items, workList.ExclusiveStartKey}, nil
 }

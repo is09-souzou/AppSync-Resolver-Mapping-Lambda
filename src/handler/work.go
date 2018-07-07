@@ -13,6 +13,6 @@ type Work struct {
 
 // WorkConnection response work connection struct
 type WorkConnection struct {
-	Items     []Work  `json:"items"`
-	NextToken *string `json:"nextToken"`
+	Items             []Work  `json:"items"`
+	ExclusiveStartKey *string `json:"exclusiveStartKey"`
 }

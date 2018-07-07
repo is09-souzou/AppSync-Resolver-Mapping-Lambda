@@ -113,56 +113,27 @@ func GetWorkByID(svc *dynamodb.DynamoDB, id string) (Work, error) {
 
 // ScanWorkListResult result ScanWorkList
 type ScanWorkListResult struct {
-	Items     []Work
-	NextToken *string
+	Items             []Work
+	ExclusiveStartKey *string
 }
 
 // ScanWorkList Scan work list By ID from DynamoDB
-func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, nextToken *string) (ScanWorkListResult, error) {
+func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string) (ScanWorkListResult, error) {
 
 	var queryInput = &dynamodb.ScanInput{
 		Limit:     &limit,
 		TableName: aws.String(WorkTableName),
 	}
 
-	if nextToken != nil {
+	if exclusiveStartKey != nil {
 		queryInput.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
 			"id": {
-				S: aws.String(*nextToken),
+				S: aws.String(*exclusiveStartKey),
 			},
 		}
 	}
 
 	result, err := svc.Scan(queryInput)
-
-	// var queryInput = &dynamodb.QueryInput{
-	// 	Limit:     &limit,
-	// 	TableName: aws.String(WorkTableName),
-	// 	KeyConditions: map[string]*dynamodb.Condition{
-	// 		"id": {
-	// 			// EQ | LE | LT | GE | GT | BEGINS_WITH | BETWEEN
-	// 			// ComparisonOperator: aws.String("EQ"),
-	// 			// AttributeValueList: []*dynamodb.AttributeValue{
-	// 			// 	{
-	// 			// 		S: aws.String("7cc9ebcc-79b2-11e8-b93a-0228c0ad61bd"),
-	// 			// 	},
-	// 			// },
-	// 			ComparisonOperator: aws.String("NOT_NULL"),
-	// 		},
-	// 	},
-	// }
-
-	// if nextToken != nil {
-	// 	queryInput.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
-	// 		"id": {
-	// 			S: aws.String(*nextToken),
-	// 		},
-	// 	}
-	// }
-
-	// req, resp := svc.QueryRequest(queryInput)
-
-	// err := req.Send()
 
 	if err != nil {
 		return ScanWorkListResult{}, err
@@ -185,14 +156,12 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, nextToken *string) (ScanW
 		items = append(items, item)
 	}
 
-
-	var respNextToken *string
+	var respExclusiveStartKey *string
 	if result.LastEvaluatedKey != nil {
-		respNextToken = result.LastEvaluatedKey["id"].S
+		respExclusiveStartKey = result.LastEvaluatedKey["id"].S
 	}
-	
 
-	return ScanWorkListResult{items, respNextToken}, nil
+	return ScanWorkListResult{items, respExclusiveStartKey}, nil
 }
 
 // UpdateWorkByID Update work By ID to DynamoDB
