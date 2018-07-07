@@ -4,38 +4,43 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handlers/user"
-	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handlers/work"
+	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/handler"
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 )
 
 // Router Routing By Field
 func Router(payload types.Payload) (interface{}, error) {
 	switch payload.Field {
+	// GraphQL Queries
+	case "listWorks":
+		var p handler.ListWork
+		json.Unmarshal(payload.Arguments, &p)
+		return handler.ListWorkHandle(p, payload.Identity)
+	// GraphQL Mutations
 	case "createUser":
-		var p user.UserCreate
+		var p handler.UserCreate
 		json.Unmarshal(payload.Arguments, &p)
-		return user.CreateUserHandle(p, payload.Identity)
+		return handler.CreateUserHandle(p, payload.Identity)
 	case "deleteUser":
-		var p user.UserDelete
+		var p handler.UserDelete
 		json.Unmarshal(payload.Arguments, &p)
-		return user.DeleteUserHandle(p, payload.Identity)
+		return handler.DeleteUserHandle(p, payload.Identity)
 	case "updateUser":
-		var p user.UserUpdate
+		var p handler.UserUpdate
 		json.Unmarshal(payload.Arguments, &p)
-		return user.UpdateUserHandle(p, payload.Identity)
+		return handler.UpdateUserHandle(p, payload.Identity)
 	case "createWork":
-		var p work.WorkCreate
+		var p handler.WorkCreate
 		json.Unmarshal(payload.Arguments, &p)
-		return work.CreateWorkHandle(p, payload.Identity)
+		return handler.CreateWorkHandle(p, payload.Identity)
 	case "deleteWork":
-		var p work.WorkDelete
+		var p handler.WorkDelete
 		json.Unmarshal(payload.Arguments, &p)
-		return work.DeleteWorkHandle(p, payload.Identity)
+		return handler.DeleteWorkHandle(p, payload.Identity)
 	case "updateWork":
-		var p work.WorkUpdate
+		var p handler.WorkUpdate
 		json.Unmarshal(payload.Arguments, &p)
-		return work.UpdateWorkHandle(p, payload.Identity)
+		return handler.UpdateWorkHandle(p, payload.Identity)
 	}
 	return nil, errors.New("field is not found")
 }

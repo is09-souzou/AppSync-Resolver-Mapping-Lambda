@@ -1,4 +1,4 @@
-package user
+package handler
 
 import (
 	"errors"
@@ -8,6 +8,11 @@ import (
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 	"golang.org/x/sync/errgroup"
 )
+
+// UserDelete delete user struct
+type UserDelete struct {
+	ID string `json:"id"`
+}
 
 // DeleteUserHandle Delete User Handle
 // Can delete only oneself

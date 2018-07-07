@@ -2,6 +2,7 @@ package model
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -110,22 +111,57 @@ func GetWorkByID(svc *dynamodb.DynamoDB, id string) (Work, error) {
 	return item, nil
 }
 
-// GetWorkList Get work list By ID from DynamoDB
-func GetWorkList(svc *dynamodb.DynamoDB) ([]Work, error) {
+// ScanWorkListResult result ScanWorkList
+type ScanWorkListResult struct {
+	Items             []Work
+	ExclusiveStartKey *string
+}
 
-	result, err := svc.GetItem(&dynamodb.GetItemInput{
+// ScanWorkList Scan work list By ID from DynamoDB
+func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string) (ScanWorkListResult, error) {
+
+	var queryInput = &dynamodb.ScanInput{
+		Limit:     &limit,
 		TableName: aws.String(WorkTableName),
-	})
-
-	item := []Work{}
-
-	err = dynamodbattribute.UnmarshalMap(result.Item, &item)
-
-	if err != nil {
-		return []Work{}, err
 	}
 
-	return item, nil
+	if exclusiveStartKey != nil {
+		queryInput.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(*exclusiveStartKey),
+			},
+		}
+	}
+
+	result, err := svc.Scan(queryInput)
+
+	if err != nil {
+		return ScanWorkListResult{}, err
+	}
+
+	items := []Work{}
+
+	for x, i := range result.Items {
+		fmt.Print("cont ", x)
+		item := Work{}
+
+		err := dynamodbattribute.UnmarshalMap(i, &item)
+
+		if err != nil {
+			fmt.Println("Got error unmarshalling:")
+			fmt.Println(err.Error())
+			return ScanWorkListResult{}, err
+		}
+
+		items = append(items, item)
+	}
+
+	var respExclusiveStartKey *string
+	if result.LastEvaluatedKey != nil {
+		respExclusiveStartKey = result.LastEvaluatedKey["id"].S
+	}
+
+	return ScanWorkListResult{items, respExclusiveStartKey}, nil
 }
 
 // UpdateWorkByID Update work By ID to DynamoDB

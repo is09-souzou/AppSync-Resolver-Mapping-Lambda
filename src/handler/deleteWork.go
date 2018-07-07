@@ -1,4 +1,4 @@
-package work
+package handler
 
 import (
 	"errors"
@@ -8,7 +8,12 @@ import (
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/types"
 )
 
-// DeleteWorkHandle Delete User Handle
+// WorkDelete delete work struct
+type WorkDelete struct {
+	ID string `json:"id"`
+}
+
+// DeleteWorkHandle Delete Work Handle
 // Can delete only oneself
 func DeleteWorkHandle(arg WorkDelete, identity types.Identity) (Work, error) {
 
