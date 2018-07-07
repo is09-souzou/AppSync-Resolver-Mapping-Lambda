@@ -117,23 +117,23 @@ type ScanWorkListResult struct {
 	ExclusiveStartKey *string
 }
 
-// ScanWorkList Scan work list By ID from DynamoDB
+// ScanWorkList Scan work list from DynamoDB
 func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string) (ScanWorkListResult, error) {
 
-	var queryInput = &dynamodb.ScanInput{
+	params := &dynamodb.ScanInput{
 		Limit:     &limit,
 		TableName: aws.String(WorkTableName),
 	}
 
 	if exclusiveStartKey != nil {
-		queryInput.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
+		params.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
 			"id": {
 				S: aws.String(*exclusiveStartKey),
 			},
 		}
 	}
 
-	result, err := svc.Scan(queryInput)
+	result, err := svc.Scan(params)
 
 	if err != nil {
 		return ScanWorkListResult{}, err
@@ -141,8 +141,72 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 
 	items := []Work{}
 
-	for x, i := range result.Items {
-		fmt.Print("cont ", x)
+	for _, i := range result.Items {
+		item := Work{}
+
+		err := dynamodbattribute.UnmarshalMap(i, &item)
+
+		if err != nil {
+			fmt.Println("Got error unmarshalling:")
+			fmt.Println(err.Error())
+			return ScanWorkListResult{}, err
+		}
+
+		items = append(items, item)
+	}
+
+	var respExclusiveStartKey *string
+	if result.LastEvaluatedKey != nil {
+		respExclusiveStartKey = result.LastEvaluatedKey["id"].S
+	}
+
+	return ScanWorkListResult{items, respExclusiveStartKey}, nil
+}
+
+// ScanWorkListByTags Scan work list By Tags from DynamoDB
+func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string, tags []string) (ScanWorkListResult, error) {
+
+	var filt expression.ConditionBuilder
+
+	for i, x := range tags {
+		if (i == 0) {
+			filt = expression.Name("tags").Contains(x)
+		} else {
+			filt = filt.And(expression.Name("tags").Contains(x))
+		}
+	}
+
+	expr, err := expression.NewBuilder().WithFilter(filt).Build()
+
+	if err != nil {
+		return ScanWorkListResult{}, err
+	}
+
+	params := &dynamodb.ScanInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		Limit:                     &limit,
+		TableName:                 aws.String(WorkTableName),
+	}
+
+	if exclusiveStartKey != nil {
+		params.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(*exclusiveStartKey),
+			},
+		}
+	}
+
+	result, err := svc.Scan(params)
+
+	if err != nil {
+		return ScanWorkListResult{}, err
+	}
+
+	items := []Work{}
+
+	for _, i := range result.Items {
 		item := Work{}
 
 		err := dynamodbattribute.UnmarshalMap(i, &item)
