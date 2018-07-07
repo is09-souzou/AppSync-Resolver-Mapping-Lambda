@@ -169,7 +169,7 @@ func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *
 	var filt expression.ConditionBuilder
 
 	for i, x := range tags {
-		if (i == 0) {
+		if i == 0 {
 			filt = expression.Name("tags").Contains(x)
 		} else {
 			filt = filt.And(expression.Name("tags").Contains(x))
