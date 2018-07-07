@@ -38,9 +38,7 @@ func ListWorkHandle(arg ListWork, identity types.Identity) (WorkConnection, erro
 
 	var workList model.ScanWorkListResult
 	if (arg.Option != nil && arg.Option.Tags != nil) {
-		fmt.Print("tags", arg.Option.Tags)
 		workList, err = model.ScanWorkListByTags(svc, limit, arg.ExclusiveStartKey, *arg.Option.Tags)
-		fmt.Print("result", workList)
 	} else {
 		workList, err = model.ScanWorkList(svc, limit, arg.ExclusiveStartKey)
 	}
