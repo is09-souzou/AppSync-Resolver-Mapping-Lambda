@@ -14,3 +14,4 @@ mv handler.zip ~/Desktop
 
 ## Fix format command
 `go fmt ./..`
+

@@ -120,12 +120,12 @@ type ScanWorkListResult struct {
 // ScanWorkList Scan work list By ID from DynamoDB
 func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, nextToken *string) (ScanWorkListResult, error) {
 
-	var queryInput = &dynamodb.QueryInput{
+	var queryInput = &dynamodb.ScanInput{
 		Limit:     &limit,
 		TableName: aws.String(WorkTableName),
 	}
 
-	if &nextToken != nil {
+	if nextToken != nil {
 		queryInput.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
 			"id": {
 				S: aws.String(*nextToken),
@@ -133,9 +133,36 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, nextToken *string) (ScanW
 		}
 	}
 
-	req, resp := svc.QueryRequest(queryInput)
+	result, err := svc.Scan(queryInput)
 
-	err := req.Send()
+	// var queryInput = &dynamodb.QueryInput{
+	// 	Limit:     &limit,
+	// 	TableName: aws.String(WorkTableName),
+	// 	KeyConditions: map[string]*dynamodb.Condition{
+	// 		"id": {
+	// 			// EQ | LE | LT | GE | GT | BEGINS_WITH | BETWEEN
+	// 			// ComparisonOperator: aws.String("EQ"),
+	// 			// AttributeValueList: []*dynamodb.AttributeValue{
+	// 			// 	{
+	// 			// 		S: aws.String("7cc9ebcc-79b2-11e8-b93a-0228c0ad61bd"),
+	// 			// 	},
+	// 			// },
+	// 			ComparisonOperator: aws.String("NOT_NULL"),
+	// 		},
+	// 	},
+	// }
+
+	// if nextToken != nil {
+	// 	queryInput.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
+	// 		"id": {
+	// 			S: aws.String(*nextToken),
+	// 		},
+	// 	}
+	// }
+
+	// req, resp := svc.QueryRequest(queryInput)
+
+	// err := req.Send()
 
 	if err != nil {
 		return ScanWorkListResult{}, err
@@ -143,10 +170,11 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, nextToken *string) (ScanW
 
 	items := []Work{}
 
-	for _, i := range resp.Items {
+	for x, i := range result.Items {
+		fmt.Print("cont ", x)
 		item := Work{}
 
-		err = dynamodbattribute.UnmarshalMap(i, &item)
+		err := dynamodbattribute.UnmarshalMap(i, &item)
 
 		if err != nil {
 			fmt.Println("Got error unmarshalling:")
@@ -154,10 +182,17 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, nextToken *string) (ScanW
 			return ScanWorkListResult{}, err
 		}
 
-		_ = append(items, item)
+		items = append(items, item)
 	}
 
-	return ScanWorkListResult{items, resp.LastEvaluatedKey["id"].S}, nil
+
+	var respNextToken *string
+	if result.LastEvaluatedKey != nil {
+		respNextToken = result.LastEvaluatedKey["id"].S
+	}
+	
+
+	return ScanWorkListResult{items, respNextToken}, nil
 }
 
 // UpdateWorkByID Update work By ID to DynamoDB

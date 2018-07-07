@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/is09-souzou/AppSync-Resolver-Mapping-Lambda/src/model"
@@ -30,9 +31,16 @@ func ListWorkHandle(arg ListWork, identity types.Identity) (WorkConnection, erro
 		return WorkConnection{}, err
 	}
 
-	workList, err := model.ScanWorkList(svc, int64(10), nil)
+	limit := int64(10)
+	if arg.Limit != nil {
+		limit = int64(*arg.Limit)
+	}
+
+	workList, err := model.ScanWorkList(svc, limit, arg.NextToken)
 
 	if err != nil {
+		fmt.Println("Got error calling ListWorkHandle:")
+		fmt.Println(err.Error())
 		return WorkConnection{}, err
 	}
 
@@ -50,7 +58,7 @@ func ListWorkHandle(arg ListWork, identity types.Identity) (WorkConnection, erro
 		createdAt, _ := strconv.Atoi(i.CreatedAt)
 		item.CreatedAt = createdAt
 
-		_ = append(items, item)
+		items = append(items, item)
 	}
 
 	return WorkConnection{items, workList.NextToken}, nil
