@@ -33,10 +33,6 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 		work.UserID = " "
 	}
 
-	if work.ImageURI == "" {
-		work.ImageURI = " "
-	}
-
 	if work.Description == "" {
 		work.Description = " "
 	}
@@ -55,9 +51,6 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 		"title": {
 			S: aws.String(work.Title),
 		},
-		"imageUri": {
-			S: aws.String(work.ImageURI),
-		},
 		"description": {
 			S: aws.String(work.Description),
 		},
@@ -68,6 +61,10 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 
 	if work.Tags != nil {
 		item["tags"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.Tags)}
+	}
+
+	if work.ImageURI != nil {
+		item["imageUri"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.ImageURI)}
 	}
 
 	input := &dynamodb.PutItemInput{
@@ -260,10 +257,7 @@ func UpdateWorkByID(svc *dynamodb.DynamoDB, work WorkUpdate) (Work, error) {
 	}
 
 	if work.ImageURI != nil {
-		if *work.ImageURI == "" {
-			*work.ImageURI = " "
-		}
-		expressionAttributeValues[":imageUri"] = &dynamodb.AttributeValue{S: aws.String(*work.ImageURI)}
+		expressionAttributeValues[":imageUri"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.ImageURI)}
 		updateExpression += "imageUri = :imageUri, "
 	}
 
