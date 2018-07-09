@@ -15,7 +15,7 @@ type WorkUpdateBase struct {
 	UserID      *string   `json:"userId"`
 	Title       *string   `json:"title"`
 	Tags        *[]string `json:"tags"`
-	ImageURI    *string   `json:"imageUri"`
+	ImageURI    *[]string `json:"imageUri"`
 	Description *string   `json:"description"`
 }
 

@@ -57,7 +57,7 @@ type Work struct {
 	UserID      string
 	Title       string
 	Tags        *[]string
-	ImageURI    string
+	ImageURI    *[]string
 	Description string
 	CreatedAt   string
 }
@@ -68,7 +68,7 @@ type WorkCreate struct {
 	UserID      string
 	Title       string
 	Tags        *[]string
-	ImageURI    string
+	ImageURI    *[]string
 	Description string
 	CreatedAt   string
 }
@@ -79,7 +79,7 @@ type WorkUpdate struct {
 	UserID      *string
 	Title       *string
 	Tags        *[]string
-	ImageURI    *string
+	ImageURI    *[]string
 	Description *string
 	CreatedAt   *string
 }
