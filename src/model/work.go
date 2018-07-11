@@ -63,8 +63,8 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 		item["tags"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.Tags)}
 	}
 
-	if work.ImageURI != nil {
-		item["imageUri"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.ImageURI)}
+	if work.ImageURIs != nil {
+		item["imageUris"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.ImageURIs)}
 	}
 
 	input := &dynamodb.PutItemInput{
@@ -228,7 +228,7 @@ func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *
 // UpdateWorkByID Update work By ID to DynamoDB
 func UpdateWorkByID(svc *dynamodb.DynamoDB, work WorkUpdate) (Work, error) {
 
-	if work.UserID == nil && work.Title == nil && work.Tags == nil && work.ImageURI == nil && work.Description == nil && work.CreatedAt == nil {
+	if work.UserID == nil && work.Title == nil && work.Tags == nil && work.ImageURIs == nil && work.Description == nil && work.CreatedAt == nil {
 		return Work{}, errors.New("required new value")
 	}
 
@@ -256,9 +256,9 @@ func UpdateWorkByID(svc *dynamodb.DynamoDB, work WorkUpdate) (Work, error) {
 		updateExpression += "tags = :tags, "
 	}
 
-	if work.ImageURI != nil {
-		expressionAttributeValues[":imageUri"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.ImageURI)}
-		updateExpression += "imageUri = :imageUri, "
+	if work.ImageURIs != nil {
+		expressionAttributeValues[":imageUris"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.ImageURIs)}
+		updateExpression += "imageUris = :imageUris, "
 	}
 
 	if work.Description != nil {

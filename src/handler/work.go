@@ -6,7 +6,7 @@ type Work struct {
 	UserID      string    `json:"userId"`
 	Title       string    `json:"title"`
 	Tags        *[]string `json:"tags"`
-	ImageURI    *[]string `json:"imageUri"`
+	ImageURIs   *[]string `json:"imageUris"`
 	Description string    `json:"description"`
 	CreatedAt   int       `json:"createdAt"`
 }
