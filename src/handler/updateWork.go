@@ -15,7 +15,7 @@ type WorkUpdateBase struct {
 	UserID      *string   `json:"userId"`
 	Title       *string   `json:"title"`
 	Tags        *[]string `json:"tags"`
-	ImageURI    *[]string `json:"imageUri"`
+	ImageURIs   *[]string `json:"imageUris"`
 	Description *string   `json:"description"`
 }
 
@@ -53,7 +53,7 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 			UserID:      nil,
 			Title:       arg.Work.Title,
 			Tags:        arg.Work.Tags,
-			ImageURI:    arg.Work.ImageURI,
+			ImageURIs:   arg.Work.ImageURIs,
 			Description: arg.Work.Description,
 		},
 	)
@@ -77,7 +77,7 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 		UserID:      newWork.UserID,
 		Title:       newWork.Title,
 		Tags:        newWork.Tags,
-		ImageURI:    newWork.ImageURI,
+		ImageURIs:   newWork.ImageURIs,
 		Description: newWork.Description,
 		CreatedAt:   newWrokCreatedAt,
 	}

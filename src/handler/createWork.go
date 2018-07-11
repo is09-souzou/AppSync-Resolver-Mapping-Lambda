@@ -16,7 +16,7 @@ type WorkCreateBase struct {
 	UserID      string    `json:"userId"`
 	Title       string    `json:"title"`
 	Tags        *[]string `json:"tags"`
-	ImageURI    *[]string `json:"imageUri"`
+	ImageURIs   *[]string `json:"imageUris"`
 	Description string    `json:"description"`
 }
 
@@ -64,7 +64,7 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 			UserID:      arg.Work.UserID,
 			Title:       arg.Work.Title,
 			Tags:        arg.Work.Tags,
-			ImageURI:    arg.Work.ImageURI,
+			ImageURIs:   arg.Work.ImageURIs,
 			Description: arg.Work.Description,
 			CreatedAt:   fmt.Sprint(createdAt),
 		},
@@ -79,7 +79,7 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 		UserID:      arg.Work.UserID,
 		Title:       arg.Work.Title,
 		Tags:        arg.Work.Tags,
-		ImageURI:    arg.Work.ImageURI,
+		ImageURIs:   arg.Work.ImageURIs,
 		Description: arg.Work.Description,
 		CreatedAt:   int(createdAt),
 	}
