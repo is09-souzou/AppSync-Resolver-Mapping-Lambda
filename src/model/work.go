@@ -57,6 +57,9 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 		"createdAt": {
 			S: aws.String(work.CreatedAt),
 		},
+		"system": {
+			S: aws.String("work"),
+		},
 	}
 
 	if work.Tags != nil {
@@ -117,9 +120,22 @@ type ScanWorkListResult struct {
 // ScanWorkList Scan work list from DynamoDB
 func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string) (ScanWorkListResult, error) {
 
-	params := &dynamodb.ScanInput{
+	// filt := expression.Name("createdAt").GreaterThan(expression.Value("1531369033"))
+	// expr, err := expression.NewBuilder().WithFilter(filt).Build()
+
+	params := &dynamodb.QueryInput{
 		Limit:     &limit,
 		TableName: aws.String(WorkTableName),
+
+		KeyConditions: map[string]*dynamodb.Condition{
+			"system": {
+				AttributeValueList: []*dynamodb.AttributeValue{
+					
+				},
+				ComparisonOperator: aws.String("EQ"),
+			},
+		},
+		IndexName: aws.String("system-createdAt-index"),
 	}
 
 	if exclusiveStartKey != nil {
@@ -127,10 +143,13 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 			"id": {
 				S: aws.String(*exclusiveStartKey),
 			},
+			"system": {
+				S: aws.String("work"),
+			},
 		}
 	}
 
-	result, err := svc.Scan(params)
+	result, err := svc.Query(params)
 
 	if err != nil {
 		return ScanWorkListResult{}, err
