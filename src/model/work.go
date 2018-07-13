@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -56,6 +57,9 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 		},
 		"createdAt": {
 			S: aws.String(work.CreatedAt),
+		},
+		"system": {
+			S: aws.String("work"),
 		},
 	}
 
@@ -114,23 +118,53 @@ type ScanWorkListResult struct {
 	ExclusiveStartKey *string
 }
 
+// ExclusiveStartKey ExclusiveStartKey for pagination
+type ExclusiveStartKey struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
+}
+
 // ScanWorkList Scan work list from DynamoDB
 func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string) (ScanWorkListResult, error) {
 
-	params := &dynamodb.ScanInput{
+	params := &dynamodb.QueryInput{
 		Limit:     &limit,
 		TableName: aws.String(WorkTableName),
+		KeyConditions: map[string]*dynamodb.Condition{
+			"system": {
+				ComparisonOperator: aws.String("EQ"),
+				AttributeValueList: []*dynamodb.AttributeValue{
+					{
+						S: aws.String("work"),
+					},
+				},
+			},
+		},
+		IndexName:        aws.String("system-createdAt-index"),
+		ScanIndexForward: aws.Bool(true),
 	}
 
 	if exclusiveStartKey != nil {
+
+		jsonBytes := ([]byte)(*exclusiveStartKey)
+
+		var key ExclusiveStartKey
+		json.Unmarshal(jsonBytes, &key)
+
 		params.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
 			"id": {
-				S: aws.String(*exclusiveStartKey),
+				S: aws.String(key.ID),
+			},
+			"createdAt": {
+				S: aws.String(key.CreatedAt),
+			},
+			"system": {
+				S: aws.String("work"),
 			},
 		}
 	}
 
-	result, err := svc.Scan(params)
+	result, err := svc.Query(params)
 
 	if err != nil {
 		return ScanWorkListResult{}, err
@@ -154,7 +188,21 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 
 	var respExclusiveStartKey *string
 	if result.LastEvaluatedKey != nil {
-		respExclusiveStartKey = result.LastEvaluatedKey["id"].S
+		fmt.Print(result.LastEvaluatedKey)
+		exclusiveStartKey := ExclusiveStartKey{
+			ID:        *result.LastEvaluatedKey["id"].S,
+			CreatedAt: *result.LastEvaluatedKey["createdAt"].S,
+		}
+		byteExclusiveStartKey, err := json.Marshal(exclusiveStartKey)
+
+		if err != nil {
+			fmt.Println("Got error json Marshal exclusiveStartKey")
+			fmt.Println(err.Error())
+			return ScanWorkListResult{}, err
+		}
+
+		stringExclusiveStartKey := string(byteExclusiveStartKey)
+		respExclusiveStartKey = &stringExclusiveStartKey
 	}
 
 	return ScanWorkListResult{items, respExclusiveStartKey}, nil
@@ -179,23 +227,47 @@ func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *
 		return ScanWorkListResult{}, err
 	}
 
-	params := &dynamodb.ScanInput{
+	params := &dynamodb.QueryInput{
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
 		FilterExpression:          expr.Filter(),
+		KeyConditions: map[string]*dynamodb.Condition{
+			"system": {
+				ComparisonOperator: aws.String("EQ"),
+				AttributeValueList: []*dynamodb.AttributeValue{
+					{
+						S: aws.String("work"),
+					},
+				},
+			},
+		},
 		Limit:                     &limit,
 		TableName:                 aws.String(WorkTableName),
+		IndexName:                 aws.String("system-createdAt-index"),
+		ScanIndexForward:          aws.Bool(true),
 	}
 
 	if exclusiveStartKey != nil {
+
+		jsonBytes := ([]byte)(*exclusiveStartKey)
+
+		var key ExclusiveStartKey
+		json.Unmarshal(jsonBytes, &key)
+
 		params.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
 			"id": {
-				S: aws.String(*exclusiveStartKey),
+				S: aws.String(key.ID),
+			},
+			"createdAt": {
+				S: aws.String(key.CreatedAt),
+			},
+			"system": {
+				S: aws.String("work"),
 			},
 		}
 	}
 
-	result, err := svc.Scan(params)
+	result, err := svc.Query(params)
 
 	if err != nil {
 		return ScanWorkListResult{}, err
