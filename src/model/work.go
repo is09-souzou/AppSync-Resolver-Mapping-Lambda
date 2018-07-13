@@ -137,7 +137,8 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 				},
 			},
 		},
-		IndexName: aws.String("system-createdAt-index"),
+		ScanIndexForward: aws.Bool(false),
+		IndexName:        aws.String("system-createdAt-index"),
 	}
 
 	if exclusiveStartKey != nil {
