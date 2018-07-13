@@ -129,10 +129,12 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 
 		KeyConditions: map[string]*dynamodb.Condition{
 			"system": {
-				AttributeValueList: []*dynamodb.AttributeValue{
-					
-				},
 				ComparisonOperator: aws.String("EQ"),
+				AttributeValueList: []*dynamodb.AttributeValue{
+					{
+						S: aws.String("work"),
+					},
+				},
 			},
 		},
 		IndexName: aws.String("system-createdAt-index"),
