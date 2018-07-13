@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
@@ -117,6 +118,12 @@ type ScanWorkListResult struct {
 	ExclusiveStartKey *string
 }
 
+// ExclusiveStartKey ExclusiveStartKey for pagination
+type ExclusiveStartKey struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
+}
+
 // ScanWorkList Scan work list from DynamoDB
 func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string) (ScanWorkListResult, error) {
 
@@ -126,7 +133,6 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 	params := &dynamodb.QueryInput{
 		Limit:     &limit,
 		TableName: aws.String(WorkTableName),
-
 		KeyConditions: map[string]*dynamodb.Condition{
 			"system": {
 				ComparisonOperator: aws.String("EQ"),
@@ -137,14 +143,23 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 				},
 			},
 		},
-		ScanIndexForward: aws.Bool(false),
 		IndexName:        aws.String("system-createdAt-index"),
+		ScanIndexForward: aws.Bool(true),
 	}
 
 	if exclusiveStartKey != nil {
+
+		jsonBytes := ([]byte)(*exclusiveStartKey)
+
+		var key ExclusiveStartKey
+		json.Unmarshal(jsonBytes, &key)
+
 		params.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
 			"id": {
-				S: aws.String(*exclusiveStartKey),
+				S: aws.String(key.ID),
+			},
+			"createdAt": {
+				S: aws.String(key.CreatedAt),
 			},
 			"system": {
 				S: aws.String("work"),
@@ -176,7 +191,21 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 
 	var respExclusiveStartKey *string
 	if result.LastEvaluatedKey != nil {
-		respExclusiveStartKey = result.LastEvaluatedKey["id"].S
+		fmt.Print(result.LastEvaluatedKey)
+		exclusiveStartKey := ExclusiveStartKey{
+			ID:        *result.LastEvaluatedKey["id"].S,
+			CreatedAt: *result.LastEvaluatedKey["createdAt"].S,
+		}
+		byteExclusiveStartKey, err := json.Marshal(exclusiveStartKey)
+
+		if err != nil {
+			fmt.Println("Got error json Marshal exclusiveStartKey")
+			fmt.Println(err.Error())
+			return ScanWorkListResult{}, err
+		}
+
+		stringExclusiveStartKey := string(byteExclusiveStartKey)
+		respExclusiveStartKey = &stringExclusiveStartKey
 	}
 
 	return ScanWorkListResult{items, respExclusiveStartKey}, nil
