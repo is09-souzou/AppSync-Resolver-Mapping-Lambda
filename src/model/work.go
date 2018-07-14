@@ -211,26 +211,7 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 // ScanWorkListByTags Scan work list By Tags from DynamoDB
 func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string, tags []string) (ScanWorkListResult, error) {
 
-	var filt expression.ConditionBuilder
-
-	for i, x := range tags {
-		if i == 0 {
-			filt = expression.Name("tags").Contains(x)
-		} else {
-			filt = filt.And(expression.Name("tags").Contains(x))
-		}
-	}
-
-	expr, err := expression.NewBuilder().WithFilter(filt).Build()
-
-	if err != nil {
-		return ScanWorkListResult{}, err
-	}
-
 	params := &dynamodb.QueryInput{
-		ExpressionAttributeNames:  expr.Names(),
-		ExpressionAttributeValues: expr.Values(),
-		FilterExpression:          expr.Filter(),
 		KeyConditions: map[string]*dynamodb.Condition{
 			"system": {
 				ComparisonOperator: aws.String("EQ"),
@@ -245,6 +226,28 @@ func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *
 		TableName:        aws.String(WorkTableName),
 		IndexName:        aws.String("system-createdAt-index"),
 		ScanIndexForward: aws.Bool(false),
+	}
+
+	if len(tags) != 0 {
+		var filt expression.ConditionBuilder
+	
+		for i, x := range tags {
+			if i == 0 {
+				filt = expression.Name("tags").Contains(x)
+			} else {
+				filt = filt.And(expression.Name("tags").Contains(x))
+			}
+		}
+	
+		expr, err := expression.NewBuilder().WithFilter(filt).Build()
+
+		if err != nil {
+			return ScanWorkListResult{}, err
+		}
+		
+		params.ExpressionAttributeNames  = expr.Names();
+		params.ExpressionAttributeValues = expr.Values();
+		params.FilterExpression          = expr.Filter();
 	}
 
 	if exclusiveStartKey != nil {
