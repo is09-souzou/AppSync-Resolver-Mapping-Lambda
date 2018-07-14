@@ -291,7 +291,21 @@ func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *
 
 	var respExclusiveStartKey *string
 	if result.LastEvaluatedKey != nil {
-		respExclusiveStartKey = result.LastEvaluatedKey["id"].S
+		fmt.Print(result.LastEvaluatedKey)
+		exclusiveStartKey := ExclusiveStartKey{
+			ID:        *result.LastEvaluatedKey["id"].S,
+			CreatedAt: *result.LastEvaluatedKey["createdAt"].S,
+		}
+		byteExclusiveStartKey, err := json.Marshal(exclusiveStartKey)
+
+		if err != nil {
+			fmt.Println("Got error json Marshal exclusiveStartKey")
+			fmt.Println(err.Error())
+			return ScanWorkListResult{}, err
+		}
+
+		stringExclusiveStartKey := string(byteExclusiveStartKey)
+		respExclusiveStartKey = &stringExclusiveStartKey
 	}
 
 	return ScanWorkListResult{items, respExclusiveStartKey}, nil
