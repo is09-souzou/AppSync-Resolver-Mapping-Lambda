@@ -41,6 +41,11 @@ func Router(payload types.Payload) (interface{}, error) {
 		var p handler.WorkUpdate
 		json.Unmarshal(payload.Arguments, &p)
 		return handler.UpdateWorkHandle(p, payload.Identity)
+	// GraphQL User
+	case "connectionWork":
+		var p handler.WorkConnectionArg
+		json.Unmarshal(payload.Arguments, &p)
+		return handler.WorkConnectionHandle(p, payload.Identity)
 	}
 	return nil, errors.New("field is not found")
 }
