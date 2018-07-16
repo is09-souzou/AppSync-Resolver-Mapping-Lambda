@@ -58,7 +58,7 @@ func ListWorkHandle(arg ListWork, identity types.Identity) (WorkConnection, erro
 		item.UserID = i.UserID
 		item.Title = i.Title
 		item.Tags = i.Tags
-		item.ImageURIs = i.ImageURIs
+		item.ImageURL = i.ImageURL
 		item.Description = i.Description
 		createdAt, _ := strconv.Atoi(i.CreatedAt)
 		item.CreatedAt = createdAt
