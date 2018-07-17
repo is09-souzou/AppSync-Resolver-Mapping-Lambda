@@ -63,7 +63,7 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 		},
 	}
 
-	if work.Tags != nil {
+	if work.Tags != nil || len(*work.Tags) != 0 {
 		item["tags"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.Tags)}
 	}
 
@@ -434,7 +434,7 @@ func UpdateWorkByID(svc *dynamodb.DynamoDB, work WorkUpdate) (Work, error) {
 		updateExpression += "title = :title, "
 	}
 
-	if work.Tags != nil {
+	if work.Tags != nil || len(*work.Tags) != 0 {
 		expressionAttributeValues[":tags"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.Tags)}
 		updateExpression += "tags = :tags, "
 	}
