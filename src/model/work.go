@@ -188,7 +188,7 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 
 	var respExclusiveStartKey *string
 	if result.LastEvaluatedKey != nil {
-		fmt.Print(result.LastEvaluatedKey)
+
 		exclusiveStartKey := ExclusiveStartKey{
 			ID:        *result.LastEvaluatedKey["id"].S,
 			CreatedAt: *result.LastEvaluatedKey["createdAt"].S,
@@ -294,7 +294,7 @@ func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *
 
 	var respExclusiveStartKey *string
 	if result.LastEvaluatedKey != nil {
-		fmt.Print(result.LastEvaluatedKey)
+
 		exclusiveStartKey := ExclusiveStartKey{
 			ID:        *result.LastEvaluatedKey["id"].S,
 			CreatedAt: *result.LastEvaluatedKey["createdAt"].S,
@@ -388,7 +388,7 @@ func ScanWorkListByUserID(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey
 
 	var respExclusiveStartKey *string
 	if result.LastEvaluatedKey != nil {
-		fmt.Print(result.LastEvaluatedKey)
+
 		exclusiveStartKey := ExclusiveStartKey{
 			ID:        *result.LastEvaluatedKey["id"].S,
 			CreatedAt: *result.LastEvaluatedKey["createdAt"].S,
