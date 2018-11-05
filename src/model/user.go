@@ -56,6 +56,10 @@ func CreateUser(svc *dynamodb.DynamoDB, user UserCreate) error {
 		item["message"] = &dynamodb.AttributeValue{S: aws.String(*user.Message)}
 	}
 
+	if user.SkillList != nil && len(user.SkillList) != 0 {
+		item["skillList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(user.SkillList)}
+	}
+
 	input := &dynamodb.PutItemInput{
 		Item:      item,
 		TableName: aws.String(UserTableName),
@@ -163,6 +167,11 @@ func UpdateUserByID(svc *dynamodb.DynamoDB, user UserUpdate) (User, error) {
 		}
 		expressionAttributeValues[":message"] = &dynamodb.AttributeValue{S: aws.String(*user.Message)}
 		updateExpression += "message = :message, "
+	}
+
+	if user.SkillList != nil && len(*user.SkillList) != 0 {
+		expressionAttributeValues[":skillList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*user.SkillList)}
+		updateExpression += "skillList = :skillList, "
 	}
 
 	input := &dynamodb.UpdateItemInput{

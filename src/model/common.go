@@ -29,6 +29,7 @@ type User struct {
 	Career      *string
 	AvatarURI   *string
 	Message     *string
+	SkillList	[]string
 }
 
 // UserCreate DynamoDB Create User Struct
@@ -39,6 +40,7 @@ type UserCreate struct {
 	Career      *string
 	AvatarURI   *string
 	Message     *string
+	SkillList	[]string
 }
 
 // UserUpdate DynamoDB Update User Struct
@@ -49,6 +51,7 @@ type UserUpdate struct {
 	Career      *string
 	AvatarURI   *string
 	Message     *string
+	SkillList	*[]string
 }
 
 // Work DynamoDB Result Work Struct

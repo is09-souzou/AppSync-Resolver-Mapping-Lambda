@@ -8,4 +8,5 @@ type User struct {
 	Career      *string `json:"career"`
 	AvatarURI   *string `json:"avatarUri"`
 	Message     *string `json:"message"`
+	SkillList	[]string	`json:"skillList"`
 }
