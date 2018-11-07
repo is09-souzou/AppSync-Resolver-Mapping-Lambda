@@ -9,12 +9,12 @@ import (
 
 // UserCreateBase UserCreate user struct
 type UserCreateBase struct {
-	Email       *string 	`json:"email"`
-	DisplayName string  	`json:"displayName"`
-	Career      *string 	`json:"career"`
-	AvatarURI   *string 	`json:"avatarUri"`
-	Message     *string 	`json:"message"`
-	SkillList	[]string	`json:"skillList"`
+	Email       *string  `json:"email"`
+	DisplayName string   `json:"displayName"`
+	Career      *string  `json:"career"`
+	AvatarURI   *string  `json:"avatarUri"`
+	Message     *string  `json:"message"`
+	SkillList   []string `json:"skillList"`
 }
 
 // UserCreate create user struct
@@ -40,7 +40,7 @@ func CreateUserHandle(arg UserCreate, identity types.Identity) (User, error) {
 			Career:      arg.User.Career,
 			AvatarURI:   arg.User.AvatarURI,
 			Message:     arg.User.Message,
-			SkillList:	arg.User.SkillList,
+			SkillList:   arg.User.SkillList,
 		},
 	)
 
@@ -57,7 +57,7 @@ func CreateUserHandle(arg UserCreate, identity types.Identity) (User, error) {
 		Career:      arg.User.Career,
 		AvatarURI:   arg.User.AvatarURI,
 		Message:     arg.User.Message,
-		SkillList:	arg.User.SkillList,
+		SkillList:   arg.User.SkillList,
 	}
 
 	return result, nil
