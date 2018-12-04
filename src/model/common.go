@@ -62,6 +62,7 @@ type Work struct {
 	Tags        *[]string
 	ImageURL    *string
 	Description string
+	isPublic    *bool
 	CreatedAt   string
 }
 
@@ -73,6 +74,7 @@ type WorkCreate struct {
 	Tags        *[]string
 	ImageURL    *string
 	Description string
+	isPublic    bool
 	CreatedAt   string
 }
 
@@ -84,5 +86,6 @@ type WorkUpdate struct {
 	Tags        *[]string
 	ImageURL    *string
 	Description *string
+	isPublic    *bool
 	CreatedAt   *string
 }
