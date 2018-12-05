@@ -83,7 +83,7 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 		Tags:        arg.Work.Tags,
 		ImageURL:    arg.Work.ImageURL,
 		Description: arg.Work.Description,
-		IsPublic:    arg.work.IsPublic,
+		IsPublic:    arg.Work.IsPublic,
 		CreatedAt:   int(createdAt),
 	}
 

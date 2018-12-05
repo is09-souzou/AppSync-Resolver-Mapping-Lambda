@@ -62,7 +62,7 @@ type Work struct {
 	Tags        *[]string
 	ImageURL    *string
 	Description string
-	IsPublic    *bool
+	IsPublic    bool
 	CreatedAt   string
 }
 

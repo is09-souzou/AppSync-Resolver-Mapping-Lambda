@@ -16,6 +16,7 @@ type WorkUpdateBase struct {
 	Title       *string   `json:"title"`
 	Tags        *[]string `json:"tags"`
 	ImageURL    *string   `json:"imageUrl"`
+	IsPublic    *bool     `json:"isPublic"`
 	Description *string   `json:"description"`
 }
 
@@ -54,6 +55,7 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 			Title:       arg.Work.Title,
 			Tags:        arg.Work.Tags,
 			ImageURL:    arg.Work.ImageURL,
+			IsPublic:    arg.Work.IsPublic,
 			Description: arg.Work.Description,
 		},
 	)
@@ -79,6 +81,7 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 		Tags:        newWork.Tags,
 		ImageURL:    newWork.ImageURL,
 		Description: newWork.Description,
+		IsPublic:    newWork.IsPublic,
 		CreatedAt:   newWrokCreatedAt,
 	}
 

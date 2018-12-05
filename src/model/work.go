@@ -455,6 +455,11 @@ func UpdateWorkByID(svc *dynamodb.DynamoDB, work WorkUpdate) (Work, error) {
 		updateExpression += "description = :description, "
 	}
 
+	if work.IsPublic != nil {
+		expressionAttributeValues[":isPublic"] = &dynamodb.AttributeValue{BOOL: aws.Bool(*work.IsPublic)}
+		updateExpression += "isPublic = :isPublic, "
+	}
+
 	if work.CreatedAt != nil {
 		if *work.CreatedAt == "" {
 			*work.CreatedAt = " "
