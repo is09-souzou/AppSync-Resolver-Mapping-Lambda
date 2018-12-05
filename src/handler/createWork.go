@@ -17,7 +17,7 @@ type WorkCreateBase struct {
 	Title       string    `json:"title"`
 	Tags        *[]string `json:"tags"`
 	ImageURL    *string   `json:"imageUrl"`
-	isPublic    bool      `json:"isPublic"`
+	IsPublic    bool      `json:"isPublic"`
 	Description string    `json:"description"`
 }
 
@@ -67,7 +67,7 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 			Tags:        arg.Work.Tags,
 			ImageURL:    arg.Work.ImageURL,
 			Description: arg.Work.Description,
-			isPublic:    arg.Work.isPublic,
+			IsPublic:    arg.Work.IsPublic,
 			CreatedAt:   fmt.Sprint(createdAt),
 		},
 	); err != nil {
@@ -83,7 +83,7 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 		Tags:        arg.Work.Tags,
 		ImageURL:    arg.Work.ImageURL,
 		Description: arg.Work.Description,
-		isPublic:    arg.work.isPublic,
+		IsPublic:    arg.work.IsPublic,
 		CreatedAt:   int(createdAt),
 	}
 

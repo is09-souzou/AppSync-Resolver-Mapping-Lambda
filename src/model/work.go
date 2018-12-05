@@ -59,7 +59,7 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 			S: aws.String(work.CreatedAt),
 		},
 		"isPublic": {
-			BOOL: aws.Bool(work.isPublic),
+			BOOL: aws.Bool(work.IsPublic),
 		},
 		"system": {
 			S: aws.String("work"),

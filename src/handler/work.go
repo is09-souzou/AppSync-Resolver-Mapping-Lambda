@@ -8,7 +8,7 @@ type Work struct {
 	Tags        *[]string `json:"tags"`
 	ImageURL    *string   `json:"imageUrl"`
 	Description string    `json:"description"`
-	isPublic    *bool     `json:"isPublic"`
+	IsPublic    *bool     `json:"isPublic"`
 	CreatedAt   int       `json:"createdAt"`
 }
 
