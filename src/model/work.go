@@ -58,6 +58,9 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 		"createdAt": {
 			S: aws.String(work.CreatedAt),
 		},
+		"isPublic": {
+			BOOL: aws.Bool(work.IsPublic),
+		},
 		"system": {
 			S: aws.String("work"),
 		},
@@ -450,6 +453,11 @@ func UpdateWorkByID(svc *dynamodb.DynamoDB, work WorkUpdate) (Work, error) {
 		}
 		expressionAttributeValues[":description"] = &dynamodb.AttributeValue{S: aws.String(*work.Description)}
 		updateExpression += "description = :description, "
+	}
+
+	if work.IsPublic != nil {
+		expressionAttributeValues[":isPublic"] = &dynamodb.AttributeValue{BOOL: aws.Bool(*work.IsPublic)}
+		updateExpression += "isPublic = :isPublic, "
 	}
 
 	if work.CreatedAt != nil {
