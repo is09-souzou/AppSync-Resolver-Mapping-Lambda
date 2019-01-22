@@ -78,7 +78,7 @@ type WorkCreate struct {
 	CreatedAt   string
 }
 
-// WorkUpdate DynamoDB Create Work Struct
+// WorkUpdate DynamoDB Update Work Struct
 type WorkUpdate struct {
 	ID          string
 	UserID      *string
@@ -88,4 +88,28 @@ type WorkUpdate struct {
 	Description *string
 	IsPublic    *bool
 	CreatedAt   *string
+}
+
+// PopularTag DynamoDB Result PopularTag Struct
+type PopularTag struct {
+	Name  string
+	Count int
+}
+
+// PopularTagCreate DynamoDB Create PopularTag Struct
+type PopularTagCreate struct {
+	Name  string
+	Count int
+}
+
+// PopularTagUpdate DynamoDB Update PopularTag Struct
+type PopularTagUpdate struct {
+	Name  string
+	Count int
+}
+
+// ExclusiveStartKey ExclusiveStartKey for pagination
+type ExclusiveStartKey struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
 }

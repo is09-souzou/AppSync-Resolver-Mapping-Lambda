@@ -1,7 +1,9 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -25,6 +27,9 @@ func CreateUser(svc *dynamodb.DynamoDB, user UserCreate) error {
 		},
 		"displayName": {
 			S: aws.String(user.DisplayName),
+		},
+		"system": {
+			S: aws.String("user"),
 		},
 	}
 
@@ -101,22 +106,94 @@ func GetUserByID(svc *dynamodb.DynamoDB, id string) (User, error) {
 	return item, nil
 }
 
-// GetUserList Get user list By ID from DynamoDB
-func GetUserList(svc *dynamodb.DynamoDB) ([]User, error) {
+// ScanUserListResult result ScanUserList
+type ScanUserListResult struct {
+	Items             []User
+	ExclusiveStartKey *string
+}
 
-	result, err := svc.GetItem(&dynamodb.GetItemInput{
+// ScanUserList Scan user list from DynamoDB
+func ScanUserList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string) (ScanUserListResult, error) {
+
+	params := &dynamodb.QueryInput{
+		Limit:     &limit,
 		TableName: aws.String(UserTableName),
-	})
-
-	item := []User{}
-
-	err = dynamodbattribute.UnmarshalMap(result.Item, &item)
-
-	if err != nil {
-		return []User{}, err
+		KeyConditions: map[string]*dynamodb.Condition{
+			"system": {
+				ComparisonOperator: aws.String("EQ"),
+				AttributeValueList: []*dynamodb.AttributeValue{
+					{
+						S: aws.String("user"),
+					},
+				},
+			},
+		},
+		IndexName:        aws.String("system-createdAt-index"),
+		ScanIndexForward: aws.Bool(false),
 	}
 
-	return item, nil
+	if exclusiveStartKey != nil {
+
+		jsonBytes := ([]byte)(*exclusiveStartKey)
+
+		var key ExclusiveStartKey
+		json.Unmarshal(jsonBytes, &key)
+
+		params.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(key.ID),
+			},
+			"createdAt": {
+				S: aws.String(key.CreatedAt),
+			},
+			"system": {
+				S: aws.String("user"),
+			},
+		}
+	}
+
+	result, err := svc.Query(params)
+
+	if err != nil {
+		return ScanUserListResult{}, err
+	}
+
+	items := []User{}
+
+	for _, i := range result.Items {
+		item := User{}
+
+		err := dynamodbattribute.UnmarshalMap(i, &item)
+
+		if err != nil {
+			fmt.Println("Got error unmarshalling:")
+			fmt.Println(err.Error())
+			return ScanUserListResult{}, err
+		}
+
+		items = append(items, item)
+	}
+
+	var respExclusiveStartKey *string
+	if result.LastEvaluatedKey != nil {
+
+		exclusiveStartKey := ExclusiveStartKey{
+			ID:        *result.LastEvaluatedKey["id"].S,
+			CreatedAt: *result.LastEvaluatedKey["createdAt"].S,
+		}
+		byteExclusiveStartKey, err := json.Marshal(exclusiveStartKey)
+
+		if err != nil {
+			fmt.Println("Got error json Marshal exclusiveStartKey")
+			fmt.Println(err.Error())
+			return ScanUserListResult{}, err
+		}
+
+		stringExclusiveStartKey := string(byteExclusiveStartKey)
+		respExclusiveStartKey = &stringExclusiveStartKey
+	}
+
+	return ScanUserListResult{items, respExclusiveStartKey}, nil
 }
 
 // UpdateUserByID Update user By ID to DynamoDB
