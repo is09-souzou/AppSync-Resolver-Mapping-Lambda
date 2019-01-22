@@ -30,6 +30,7 @@ type User struct {
 	AvatarURI   *string
 	Message     *string
 	SkillList   []string
+	CreatedAt   string
 }
 
 // UserCreate DynamoDB Create User Struct
@@ -41,6 +42,7 @@ type UserCreate struct {
 	AvatarURI   *string
 	Message     *string
 	SkillList   []string
+	CreatedAt   string
 }
 
 // UserUpdate DynamoDB Update User Struct
@@ -52,6 +54,7 @@ type UserUpdate struct {
 	AvatarURI   *string
 	Message     *string
 	SkillList   *[]string
+	CreatedAt   *string
 }
 
 // Work DynamoDB Result Work Struct
@@ -94,18 +97,21 @@ type WorkUpdate struct {
 type PopularTag struct {
 	Name  string
 	Count int
+	CreatedAt string
 }
 
 // PopularTagCreate DynamoDB Create PopularTag Struct
 type PopularTagCreate struct {
 	Name  string
 	Count int
+	CreatedAt string
 }
 
 // PopularTagUpdate DynamoDB Update PopularTag Struct
 type PopularTagUpdate struct {
 	Name  string
 	Count int
+	CreatedAt *string
 }
 
 // ExclusiveStartKey ExclusiveStartKey for pagination

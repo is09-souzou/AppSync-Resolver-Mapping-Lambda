@@ -22,6 +22,9 @@ func CreatePopularTag(svc *dynamodb.DynamoDB, popularTag PopularTag) error {
 		return errors.New("required Name in popularTag")
 	}
 
+	if popularTag.CreatedAt == "" {
+		popularTag.CreatedAt = " "
+	}
 	var item = map[string]*dynamodb.AttributeValue{
 		"name": {
 			S: aws.String(popularTag.Name),
