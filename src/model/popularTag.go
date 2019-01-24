@@ -21,10 +21,6 @@ func CreatePopularTag(svc *dynamodb.DynamoDB, popularTag PopularTag) error {
 	if popularTag.Name == "" {
 		return errors.New("required Name in popularTag")
 	}
-
-	if popularTag.CreatedAt == "" {
-		popularTag.CreatedAt = " "
-	}
 	var item = map[string]*dynamodb.AttributeValue{
 		"name": {
 			S: aws.String(popularTag.Name),
@@ -176,13 +172,16 @@ func UpdatePopularTagByName(svc *dynamodb.DynamoDB, popularTag PopularTag) (Popu
 	}
 
 	expressionAttributeValues := map[string]*dynamodb.AttributeValue{}
-	updateExpression := "SET "
+	updateExpression := "SET"
 
-	expressionAttributeValues[":count"] = &dynamodb.AttributeValue{N: aws.String(strconv.Itoa(popularTag.Count))}
-	updateExpression += "count = :count, "
+	expressionAttributeValues["#c"] = &dynamodb.AttributeValue{N: aws.String(strconv.Itoa(popularTag.Count))}
+	updateExpression += "#c = :#c, "
 
 	input := &dynamodb.UpdateItemInput{
-		TableName:                 aws.String(PopularTagTableName),
+		TableName: aws.String(PopularTagTableName),
+		ExpressionAttributeNames: map[string]*string{
+			"#c": aws.String("count"),
+		},
 		ExpressionAttributeValues: expressionAttributeValues,
 		Key: map[string]*dynamodb.AttributeValue{
 			"name": {
