@@ -95,22 +95,22 @@ type WorkUpdate struct {
 
 // PopularTag DynamoDB Result PopularTag Struct
 type PopularTag struct {
-	Name  string
-	Count int
+	Name      string
+	Count     int
 	CreatedAt string
 }
 
 // PopularTagCreate DynamoDB Create PopularTag Struct
 type PopularTagCreate struct {
-	Name  string
-	Count int
+	Name      string
+	Count     int
 	CreatedAt string
 }
 
 // PopularTagUpdate DynamoDB Update PopularTag Struct
 type PopularTagUpdate struct {
-	Name  string
-	Count int
+	Name      string
+	Count     int
 	CreatedAt *string
 }
 

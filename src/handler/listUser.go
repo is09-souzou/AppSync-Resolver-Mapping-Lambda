@@ -17,7 +17,7 @@ type ListUser struct {
 
 // UserQueryOption user query option struct
 type UserQueryOption struct {
-	UserID *string   `json:"userId"`
+	UserID *string `json:"userId"`
 }
 
 // ListUserHandle List User Handle
