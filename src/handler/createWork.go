@@ -76,6 +76,9 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 		return Work{}, err
 	}
 
+	// Add tags of new work to popular tag
+	// TODO
+
 	result := Work{
 		ID:          id,
 		UserID:      arg.Work.UserID,

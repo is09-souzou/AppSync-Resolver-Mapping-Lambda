@@ -37,7 +37,7 @@ func UserConnectionHandle(arg UserConnectionArg, identity types.Identity) (UserC
 		return UserConnection{}, err
 	}
 
-	items := []Work{}
+	items := []User{}
 
 	for _, i := range userList.Items {
 		item := User{}
@@ -55,5 +55,5 @@ func UserConnectionHandle(arg UserConnectionArg, identity types.Identity) (UserC
 		items = append(items, item)
 	}
 
-	return WorkConnection{items, workList.ExclusiveStartKey}, nil
+	return UserConnection{items, userList.ExclusiveStartKey}, nil
 }
