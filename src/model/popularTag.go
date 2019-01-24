@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -171,25 +170,23 @@ func UpdatePopularTagByName(svc *dynamodb.DynamoDB, popularTag PopularTag) (Popu
 		return PopularTag{}, errors.New("required Name in popularTag")
 	}
 
-	expressionAttributeValues := map[string]*dynamodb.AttributeValue{}
-	updateExpression := "SET"
-
-	expressionAttributeValues["#c"] = &dynamodb.AttributeValue{N: aws.String(strconv.Itoa(popularTag.Count))}
-	updateExpression += "#c = :#c, "
-
 	input := &dynamodb.UpdateItemInput{
 		TableName: aws.String(PopularTagTableName),
 		ExpressionAttributeNames: map[string]*string{
 			"#c": aws.String("count"),
 		},
-		ExpressionAttributeValues: expressionAttributeValues,
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
+			":c": {
+				N: aws.String("1"),
+			},
+		},
 		Key: map[string]*dynamodb.AttributeValue{
 			"name": {
 				S: aws.String(popularTag.Name),
 			},
 		},
 		ReturnValues:     aws.String("ALL_NEW"),
-		UpdateExpression: aws.String(strings.TrimRight(updateExpression, ", ")),
+		UpdateExpression: aws.String("ADD #c :c"),
 	}
 
 	result, err := svc.UpdateItem(input)
