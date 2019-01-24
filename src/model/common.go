@@ -30,6 +30,7 @@ type User struct {
 	AvatarURI   *string
 	Message     *string
 	SkillList   []string
+	CreatedAt   string
 }
 
 // UserCreate DynamoDB Create User Struct
@@ -41,6 +42,7 @@ type UserCreate struct {
 	AvatarURI   *string
 	Message     *string
 	SkillList   []string
+	CreatedAt   string
 }
 
 // UserUpdate DynamoDB Update User Struct
@@ -52,6 +54,7 @@ type UserUpdate struct {
 	AvatarURI   *string
 	Message     *string
 	SkillList   *[]string
+	CreatedAt   *string
 }
 
 // Work DynamoDB Result Work Struct
@@ -78,7 +81,7 @@ type WorkCreate struct {
 	CreatedAt   string
 }
 
-// WorkUpdate DynamoDB Create Work Struct
+// WorkUpdate DynamoDB Update Work Struct
 type WorkUpdate struct {
 	ID          string
 	UserID      *string
@@ -88,4 +91,28 @@ type WorkUpdate struct {
 	Description *string
 	IsPublic    *bool
 	CreatedAt   *string
+}
+
+// PopularTag DynamoDB Result PopularTag Struct
+type PopularTag struct {
+	Name  string
+	Count int
+}
+
+// PopularTagCreate DynamoDB Create PopularTag Struct
+type PopularTagCreate struct {
+	Name  string
+	Count int
+}
+
+// PopularTagUpdate DynamoDB Update PopularTag Struct
+type PopularTagUpdate struct {
+	Name  string
+	Count int
+}
+
+// ExclusiveStartKey ExclusiveStartKey for pagination
+type ExclusiveStartKey struct {
+	ID        string `json:"id"`
+	CreatedAt string `json:"createdAt"`
 }

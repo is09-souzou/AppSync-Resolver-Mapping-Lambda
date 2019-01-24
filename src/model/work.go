@@ -121,12 +121,6 @@ type ScanWorkListResult struct {
 	ExclusiveStartKey *string
 }
 
-// ExclusiveStartKey ExclusiveStartKey for pagination
-type ExclusiveStartKey struct {
-	ID        string `json:"id"`
-	CreatedAt string `json:"createdAt"`
-}
-
 // ScanWorkList Scan work list from DynamoDB
 func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string) (ScanWorkListResult, error) {
 

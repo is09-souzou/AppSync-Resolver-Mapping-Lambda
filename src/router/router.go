@@ -16,6 +16,10 @@ func Router(payload types.Payload) (interface{}, error) {
 		var p handler.ListWork
 		json.Unmarshal(payload.Arguments, &p)
 		return handler.ListWorkHandle(p, payload.Identity)
+	case "listUsers":
+		var p handler.ListWork
+		json.Unmarshal(payload.Arguments, &p)
+		return handler.ListWorkHandle(p, payload.Identity)
 	// GraphQL Mutations
 	case "createUser":
 		var p handler.UserCreate
@@ -46,6 +50,10 @@ func Router(payload types.Payload) (interface{}, error) {
 		var p handler.WorkConnectionArg
 		json.Unmarshal(payload.Arguments, &p)
 		return handler.WorkConnectionHandle(p, payload.Identity)
+	case "connectionUser":
+		var p handler.UserConnectionArg
+		json.Unmarshal(payload.Arguments, &p)
+		return handler.UserConnectionHandle(p, payload.Identity)
 	}
 	return nil, errors.New("field is not found")
 }

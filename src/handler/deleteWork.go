@@ -33,6 +33,20 @@ func DeleteWorkHandle(arg WorkDelete, identity types.Identity) (Work, error) {
 		return Work{}, errors.New("Can delete only oneself")
 	}
 
+	// Delete popular tags
+	if work.Tags != nil {
+		for _, i := range *work.Tags {
+			tag, err := model.GetPopularTagByName(svc, i)
+			if err != nil || tag.Name == "" {
+				if err := model.DeletePopularTagByName(svc, i); err != nil {
+					fmt.Println("Got error calling DeletePopularTag:")
+					fmt.Println(err.Error())
+					return Work{}, err
+				}
+			}
+		}
+	}
+
 	err = model.DeleteWorkByID(svc, arg.ID)
 
 	if err != nil {

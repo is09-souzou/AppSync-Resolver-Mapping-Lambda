@@ -9,4 +9,11 @@ type User struct {
 	AvatarURI   *string  `json:"avatarUri"`
 	Message     *string  `json:"message"`
 	SkillList   []string `json:"skillList"`
+	CreatedAt   int      `json:"createdAt"`
+}
+
+// UserConnection response user connection struct
+type UserConnection struct {
+	Items             []User  `json:"items"`
+	ExclusiveStartKey *string `json:"exclusiveStartKey"`
 }

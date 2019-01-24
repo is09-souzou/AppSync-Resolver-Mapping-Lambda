@@ -87,5 +87,32 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 		CreatedAt:   int(createdAt),
 	}
 
+	// Add or Inclement popular tags
+	if arg.Work.Tags != nil {
+		for _, i := range *arg.Work.Tags {
+			tag, err := model.GetPopularTagByName(svc, i)
+			if err != nil || tag.Name == "" {
+				if err := model.CreatePopularTag(
+					svc,
+					model.PopularTag{
+						Name:  i,
+						Count: 1,
+					},
+				); err != nil {
+					fmt.Println("Got error calling CreatePopularTag:")
+					fmt.Println(err.Error())
+					return Work{}, err
+				}
+			} else {
+				_, err := model.UpdatePopularTagByName(svc, tag)
+				if err != nil {
+					fmt.Println("Got error calling UpdatePopularTag:")
+					fmt.Println(err.Error())
+					return Work{}, err
+				}
+			}
+		}
+	}
+
 	return result, nil
 }
