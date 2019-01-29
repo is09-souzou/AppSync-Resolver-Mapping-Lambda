@@ -164,7 +164,7 @@ func ScanPopularTagList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *
 }
 
 // UpdatePopularTagByName Update popular tag By Name to DynamoDB
-func UpdatePopularTagByName(svc *dynamodb.DynamoDB, popularTag PopularTag) (PopularTag, error) {
+func UpdatePopularTagByName(svc *dynamodb.DynamoDB, popularTag PopularTag, count string) (PopularTag, error) {
 
 	if popularTag.Name == "" {
 		return PopularTag{}, errors.New("required Name in popularTag")
@@ -177,7 +177,7 @@ func UpdatePopularTagByName(svc *dynamodb.DynamoDB, popularTag PopularTag) (Popu
 		},
 		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{
 			":c": {
-				N: aws.String("1"),
+				N: aws.String(count),
 			},
 		},
 		Key: map[string]*dynamodb.AttributeValue{
@@ -225,5 +225,5 @@ func DeletePopularTagByName(svc *dynamodb.DynamoDB, name string) error {
 	}
 
 	return nil
-
+	
 }

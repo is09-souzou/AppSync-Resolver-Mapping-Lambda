@@ -33,26 +33,35 @@ func DeleteWorkHandle(arg WorkDelete, identity types.Identity) (Work, error) {
 		return Work{}, errors.New("Can delete only oneself")
 	}
 
-	// Delete popular tags
-	if work.Tags != nil {
-		for _, i := range *work.Tags {
-			tag, err := model.GetPopularTagByName(svc, i)
-			if err != nil || tag.Name == "" {
-				if err := model.DeletePopularTagByName(svc, i); err != nil {
-					fmt.Println("Got error calling DeletePopularTag:")
-					fmt.Println(err.Error())
-					return Work{}, err
-				}
-			}
-		}
-	}
-
 	err = model.DeleteWorkByID(svc, arg.ID)
 
 	if err != nil {
 		fmt.Println("Got error calling DeleteUserHandle:")
 		fmt.Println(err.Error())
 		return Work{}, err
+	}
+
+	// Delete popular tags
+	if work.Tags != nil {
+		for _, i := range *work.Tags {
+			tag, err := model.GetPopularTagByName(svc, i)
+			if err != nil || tag.Name != "" {
+				result, err := model.UpdatePopularTagByName(svc, tag, "-1")
+				if err != nil {
+					fmt.Println("Got error calling UpdatePopularTag:")
+					fmt.Println(err.Error())
+					return Work{}, err
+				}
+				if result.Count == 0 {
+					err := model.DeletePopularTagByName(svc, result.Name)
+					if err != nil {
+						fmt.Println("Got error calling DeletePopularTag:")
+						fmt.Println(err.Error())
+						return Work{}, err
+					}
+				}
+			}
+		}
 	}
 
 	return Work{ID: arg.ID}, nil
