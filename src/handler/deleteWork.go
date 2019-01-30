@@ -23,7 +23,7 @@ func DeleteWorkHandle(arg WorkDelete, identity types.Identity) (Work, error) {
 		return Work{}, err
 	}
 
-	work, err := model.GetWorkByID(svc, arg.ID)
+	work, err := model.GetWorkByID(svc, arg.ID, false)
 
 	if err != nil {
 		return Work{}, err

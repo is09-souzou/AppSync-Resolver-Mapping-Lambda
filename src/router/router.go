@@ -16,6 +16,10 @@ func Router(payload types.Payload) (interface{}, error) {
 		var p handler.ListWork
 		json.Unmarshal(payload.Arguments, &p)
 		return handler.ListWorkHandle(p, payload.Identity)
+	case "readWork":
+		var p handler.ReadWork
+		json.Unmarshal(payload.Arguments, &p)
+		return handler.ReadWorkHandle(p, payload.Identity)
 	case "listUsers":
 		var p handler.ListWork
 		json.Unmarshal(payload.Arguments, &p)
