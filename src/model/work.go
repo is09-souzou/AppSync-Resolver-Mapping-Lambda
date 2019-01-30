@@ -89,7 +89,7 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 }
 
 // GetWorkByID Get work by ID from DynamoDB
-func GetWorkByID(svc *dynamodb.DynamoDB, id string) (Work, error) {
+func GetWorkByID(svc *dynamodb.DynamoDB, id string, publicOnly bool) (Work, error) {
 
 	result, err := svc.GetItem(&dynamodb.GetItemInput{
 		TableName: aws.String(WorkTableName),
@@ -112,6 +112,10 @@ func GetWorkByID(svc *dynamodb.DynamoDB, id string) (Work, error) {
 		return Work{}, err
 	}
 
+	if publicOnly && item.IsPublic == false {
+		return Work{}, nil
+	}
+
 	return item, nil
 }
 
@@ -122,7 +126,7 @@ type ScanWorkListResult struct {
 }
 
 // ScanWorkList Scan work list from DynamoDB
-func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string) (ScanWorkListResult, error) {
+func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string, publicOnly bool) (ScanWorkListResult, error) {
 
 	params := &dynamodb.QueryInput{
 		Limit:     &limit,
@@ -141,100 +145,9 @@ func ScanWorkList(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string
 		ScanIndexForward: aws.Bool(false),
 	}
 
-	if exclusiveStartKey != nil {
-
-		jsonBytes := ([]byte)(*exclusiveStartKey)
-
-		var key ExclusiveStartKey
-		json.Unmarshal(jsonBytes, &key)
-
-		params.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
-			"id": {
-				S: aws.String(key.ID),
-			},
-			"createdAt": {
-				S: aws.String(key.CreatedAt),
-			},
-			"system": {
-				S: aws.String("work"),
-			},
-		}
-	}
-
-	result, err := svc.Query(params)
-
-	if err != nil {
-		return ScanWorkListResult{}, err
-	}
-
-	items := []Work{}
-
-	for _, i := range result.Items {
-		item := Work{}
-
-		err := dynamodbattribute.UnmarshalMap(i, &item)
-
-		if err != nil {
-			fmt.Println("Got error unmarshalling:")
-			fmt.Println(err.Error())
-			return ScanWorkListResult{}, err
-		}
-
-		items = append(items, item)
-	}
-
-	var respExclusiveStartKey *string
-	if result.LastEvaluatedKey != nil {
-
-		exclusiveStartKey := ExclusiveStartKey{
-			ID:        *result.LastEvaluatedKey["id"].S,
-			CreatedAt: *result.LastEvaluatedKey["createdAt"].S,
-		}
-		byteExclusiveStartKey, err := json.Marshal(exclusiveStartKey)
-
-		if err != nil {
-			fmt.Println("Got error json Marshal exclusiveStartKey")
-			fmt.Println(err.Error())
-			return ScanWorkListResult{}, err
-		}
-
-		stringExclusiveStartKey := string(byteExclusiveStartKey)
-		respExclusiveStartKey = &stringExclusiveStartKey
-	}
-
-	return ScanWorkListResult{items, respExclusiveStartKey}, nil
-}
-
-// ScanWorkListByTags Scan work list By Tags from DynamoDB
-func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string, tags []string) (ScanWorkListResult, error) {
-
-	params := &dynamodb.QueryInput{
-		KeyConditions: map[string]*dynamodb.Condition{
-			"system": {
-				ComparisonOperator: aws.String("EQ"),
-				AttributeValueList: []*dynamodb.AttributeValue{
-					{
-						S: aws.String("work"),
-					},
-				},
-			},
-		},
-		Limit:            &limit,
-		TableName:        aws.String(WorkTableName),
-		IndexName:        aws.String("system-createdAt-index"),
-		ScanIndexForward: aws.Bool(false),
-	}
-
-	if len(tags) != 0 {
+	if publicOnly {
 		var filt expression.ConditionBuilder
-
-		for i, x := range tags {
-			if i == 0 {
-				filt = expression.Name("tags").Contains(x)
-			} else {
-				filt = filt.And(expression.Name("tags").Contains(x))
-			}
-		}
+		filt = expression.Name("isPublic").Equal(expression.Value(true))
 
 		expr, err := expression.NewBuilder().WithFilter(filt).Build()
 
@@ -311,20 +224,10 @@ func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *
 	return ScanWorkListResult{items, respExclusiveStartKey}, nil
 }
 
-// ScanWorkListByUserID Scan work list By User ID from DynamoDB
-func ScanWorkListByUserID(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string, userID string) (ScanWorkListResult, error) {
-
-	filt := expression.Name("userId").Contains(userID)
-	expr, err := expression.NewBuilder().WithFilter(filt).Build()
-
-	if err != nil {
-		return ScanWorkListResult{}, err
-	}
+// ScanWorkListByTags Scan work list By Tags from DynamoDB
+func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string, tags []string, publicOnly bool) (ScanWorkListResult, error) {
 
 	params := &dynamodb.QueryInput{
-		ExpressionAttributeNames:  expr.Names(),
-		ExpressionAttributeValues: expr.Values(),
-		FilterExpression:          expr.Filter(),
 		KeyConditions: map[string]*dynamodb.Condition{
 			"system": {
 				ComparisonOperator: aws.String("EQ"),
@@ -340,6 +243,124 @@ func ScanWorkListByUserID(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey
 		IndexName:        aws.String("system-createdAt-index"),
 		ScanIndexForward: aws.Bool(false),
 	}
+
+	if publicOnly {
+		var filt expression.ConditionBuilder
+		filt = expression.Name("isPublic").Equal(expression.Value(true))
+
+		if len(tags) != 0 {
+			for _, x := range tags {
+				filt = filt.And(expression.Name("tags").Contains(x))
+			}
+		}
+
+		expr, err := expression.NewBuilder().WithFilter(filt).Build()
+		if err != nil {
+			return ScanWorkListResult{}, err
+		}
+		params.ExpressionAttributeNames = expr.Names()
+		params.ExpressionAttributeValues = expr.Values()
+		params.FilterExpression = expr.Filter()
+	}
+
+	if exclusiveStartKey != nil {
+
+		jsonBytes := ([]byte)(*exclusiveStartKey)
+
+		var key ExclusiveStartKey
+		json.Unmarshal(jsonBytes, &key)
+
+		params.ExclusiveStartKey = map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(key.ID),
+			},
+			"createdAt": {
+				S: aws.String(key.CreatedAt),
+			},
+			"system": {
+				S: aws.String("work"),
+			},
+		}
+	}
+
+	result, err := svc.Query(params)
+
+	if err != nil {
+		return ScanWorkListResult{}, err
+	}
+
+	items := []Work{}
+
+	for _, i := range result.Items {
+		item := Work{}
+
+		err := dynamodbattribute.UnmarshalMap(i, &item)
+
+		if err != nil {
+			fmt.Println("Got error unmarshalling:")
+			fmt.Println(err.Error())
+			return ScanWorkListResult{}, err
+		}
+
+		items = append(items, item)
+	}
+
+	var respExclusiveStartKey *string
+	if result.LastEvaluatedKey != nil {
+
+		exclusiveStartKey := ExclusiveStartKey{
+			ID:        *result.LastEvaluatedKey["id"].S,
+			CreatedAt: *result.LastEvaluatedKey["createdAt"].S,
+		}
+		byteExclusiveStartKey, err := json.Marshal(exclusiveStartKey)
+
+		if err != nil {
+			fmt.Println("Got error json Marshal exclusiveStartKey")
+			fmt.Println(err.Error())
+			return ScanWorkListResult{}, err
+		}
+
+		stringExclusiveStartKey := string(byteExclusiveStartKey)
+		respExclusiveStartKey = &stringExclusiveStartKey
+	}
+
+	return ScanWorkListResult{items, respExclusiveStartKey}, nil
+}
+
+// ScanWorkListByUserID Scan work list By User ID from DynamoDB
+func ScanWorkListByUserID(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string, userID string, publicOnly bool) (ScanWorkListResult, error) {
+
+
+	params := &dynamodb.QueryInput{
+		KeyConditions: map[string]*dynamodb.Condition{
+			"system": {
+				ComparisonOperator: aws.String("EQ"),
+				AttributeValueList: []*dynamodb.AttributeValue{
+					{
+						S: aws.String("work"),
+					},
+				},
+			},
+		},
+		Limit:            &limit,
+		TableName:        aws.String(WorkTableName),
+		IndexName:        aws.String("system-createdAt-index"),
+		ScanIndexForward: aws.Bool(false),
+	}
+
+	filt := expression.Name("userId").Contains(userID)
+
+	if publicOnly {
+		filt = filt.And(expression.Name("isPublic").Equal(expression.Value(true)))
+	}
+
+	expr, err := expression.NewBuilder().WithFilter(filt).Build()
+	if err != nil {
+		return ScanWorkListResult{}, err
+	}
+	params.ExpressionAttributeNames = expr.Names()
+	params.ExpressionAttributeValues = expr.Values()
+	params.FilterExpression = expr.Filter()
 
 	if exclusiveStartKey != nil {
 

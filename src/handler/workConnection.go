@@ -29,8 +29,13 @@ func WorkConnectionHandle(arg WorkConnectionArg, identity types.Identity) (WorkC
 		limit = int64(*arg.Limit)
 	}
 
+	var publicOnly = true;
+	if arg.UserID == identity.Sub {
+		publicOnly = false;
+	}
+
 	var workList model.ScanWorkListResult
-	workList, err = model.ScanWorkListByUserID(svc, limit, arg.ExclusiveStartKey, arg.UserID)
+	workList, err = model.ScanWorkListByUserID(svc, limit, arg.ExclusiveStartKey, arg.UserID, publicOnly)
 
 	if err != nil {
 		fmt.Println("Got error calling ListWorkHandle:")
