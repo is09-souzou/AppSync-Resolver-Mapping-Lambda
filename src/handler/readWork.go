@@ -30,7 +30,7 @@ func ReadWorkHandle(arg ReadWork, identity types.Identity) (Work, error) {
 		return Work{}, err
 	}
 
-	if arg.ID == identity.Sub {
+	if !work.IsPublic && work.UserID != identity.Sub {
 		return Work{}, nil
 	}
 
