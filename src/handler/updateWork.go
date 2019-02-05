@@ -35,7 +35,7 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 		return Work{}, err
 	}
 
-	work, err := model.GetWorkByID(svc, arg.Work.ID)
+	work, err := model.GetWorkByID(svc, arg.Work.ID, false)
 
 	if err != nil {
 		fmt.Println("Got error calling UpdateWorkHandle:")
