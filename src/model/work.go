@@ -330,7 +330,6 @@ func ScanWorkListByTags(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *
 // ScanWorkListByUserID Scan work list By User ID from DynamoDB
 func ScanWorkListByUserID(svc *dynamodb.DynamoDB, limit int64, exclusiveStartKey *string, userID string, publicOnly bool) (ScanWorkListResult, error) {
 
-
 	params := &dynamodb.QueryInput{
 		KeyConditions: map[string]*dynamodb.Condition{
 			"system": {

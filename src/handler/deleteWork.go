@@ -41,7 +41,7 @@ func DeleteWorkHandle(arg WorkDelete, identity types.Identity) (Work, error) {
 		return Work{}, err
 	}
 
-	// Delete popular tags
+	// Delete or Decrement popular tags
 	if work.Tags != nil {
 		for _, i := range *work.Tags {
 			tag, err := model.GetPopularTagByName(svc, i)

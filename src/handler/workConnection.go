@@ -29,9 +29,9 @@ func WorkConnectionHandle(arg WorkConnectionArg, identity types.Identity) (WorkC
 		limit = int64(*arg.Limit)
 	}
 
-	var publicOnly = true;
+	var publicOnly = true
 	if arg.UserID == identity.Sub {
-		publicOnly = false;
+		publicOnly = false
 	}
 
 	var workList model.ScanWorkListResult
