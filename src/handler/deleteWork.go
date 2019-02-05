@@ -45,7 +45,7 @@ func DeleteWorkHandle(arg WorkDelete, identity types.Identity) (Work, error) {
 	if work.Tags != nil {
 		for _, i := range *work.Tags {
 			tag, err := model.GetPopularTagByName(svc, i)
-			if err != nil || tag.Name != "" {
+			if err == nil && tag.Name != "" {
 				result, err := model.UpdatePopularTagByName(svc, tag, "-1")
 				if err != nil {
 					fmt.Println("Got error calling UpdatePopularTag:")

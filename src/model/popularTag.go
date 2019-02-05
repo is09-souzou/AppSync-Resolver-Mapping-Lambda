@@ -225,5 +225,5 @@ func DeletePopularTagByName(svc *dynamodb.DynamoDB, name string) error {
 	}
 
 	return nil
-	
+
 }
