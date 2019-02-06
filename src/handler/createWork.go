@@ -104,7 +104,7 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 					return Work{}, err
 				}
 			} else {
-				_, err := model.UpdatePopularTagByName(svc, tag)
+				_, err := model.UpdatePopularTagByName(svc, tag, "1")
 				if err != nil {
 					fmt.Println("Got error calling UpdatePopularTag:")
 					fmt.Println(err.Error())

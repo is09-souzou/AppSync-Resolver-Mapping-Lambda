@@ -74,6 +74,29 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 		return Work{}, err
 	}
 
+	// Delete or Decrement popular tags of oldWork
+	if work.Tags != nil {
+		for _, i := range *work.Tags {
+			tag, err := model.GetPopularTagByName(svc, i)
+			if err == nil && tag.Name != "" {
+				result, err := model.UpdatePopularTagByName(svc, tag, "-1")
+				if err != nil {
+					fmt.Println("Got error calling UpdatePopularTag:")
+					fmt.Println(err.Error())
+					return Work{}, err
+				}
+				if result.Count == 0 {
+					err := model.DeletePopularTagByName(svc, result.Name)
+					if err != nil {
+						fmt.Println("Got error calling DeletePopularTag:")
+						fmt.Println(err.Error())
+						return Work{}, err
+					}
+				}
+			}
+		}
+	}
+
 	result := Work{
 		ID:          newWork.ID,
 		UserID:      newWork.UserID,
@@ -83,6 +106,33 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 		Description: newWork.Description,
 		IsPublic:    newWork.IsPublic,
 		CreatedAt:   newWrokCreatedAt,
+	}
+
+	// Add or Inclement popular tags of newWork
+	if newWork.Tags != nil {
+		for _, i := range *newWork.Tags {
+			tag, err := model.GetPopularTagByName(svc, i)
+			if err != nil || tag.Name == "" {
+				if err := model.CreatePopularTag(
+					svc,
+					model.PopularTag{
+						Name:  i,
+						Count: 1,
+					},
+				); err != nil {
+					fmt.Println("Got error calling CreatePopularTag:")
+					fmt.Println(err.Error())
+					return Work{}, err
+				}
+			} else {
+				_, err := model.UpdatePopularTagByName(svc, tag, "1")
+				if err != nil {
+					fmt.Println("Got error calling UpdatePopularTag:")
+					fmt.Println(err.Error())
+					return Work{}, err
+				}
+			}
+		}
 	}
 
 	return result, nil
