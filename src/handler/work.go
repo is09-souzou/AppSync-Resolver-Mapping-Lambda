@@ -2,14 +2,15 @@ package handler
 
 // Work response work struct
 type Work struct {
-	ID          string    `json:"id"`
-	UserID      string    `json:"userId"`
-	Title       string    `json:"title"`
-	Tags        *[]string `json:"tags"`
-	ImageURL    *string   `json:"imageUrl"`
-	Description string    `json:"description"`
-	IsPublic    bool      `json:"isPublic"`
-	CreatedAt   int       `json:"createdAt"`
+	ID               string    `json:"id"`
+	UserID           string    `json:"userId"`
+	Title            string    `json:"title"`
+	Tags             *[]string `json:"tags"`
+	ImageURL         *string   `json:"imageUrl"`
+	Description      string    `json:"description"`
+	IsPublic         bool      `json:"isPublic"`
+	CreatedAt        int       `json:"createdAt"`
+	FavoriteUserList *[]string `json:"favoriteUserList"`
 }
 
 // WorkConnection response work connection struct

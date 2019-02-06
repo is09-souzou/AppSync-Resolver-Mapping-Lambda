@@ -13,12 +13,13 @@ import (
 
 // WorkCreateBase WorkCreate work struct
 type WorkCreateBase struct {
-	UserID      string    `json:"userId"`
-	Title       string    `json:"title"`
-	Tags        *[]string `json:"tags"`
-	ImageURL    *string   `json:"imageUrl"`
-	IsPublic    bool      `json:"isPublic"`
-	Description string    `json:"description"`
+	UserID           string    `json:"userId"`
+	Title            string    `json:"title"`
+	Tags             *[]string `json:"tags"`
+	ImageURL         *string   `json:"imageUrl"`
+	IsPublic         bool      `json:"isPublic"`
+	Description      string    `json:"description"`
+	FavoriteUserList *[]string `json:"favoriteUserList"`
 }
 
 // WorkCreate create work struct
@@ -61,14 +62,15 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 	if err := model.CreateWork(
 		svc,
 		model.WorkCreate{
-			ID:          id,
-			UserID:      arg.Work.UserID,
-			Title:       arg.Work.Title,
-			Tags:        arg.Work.Tags,
-			ImageURL:    arg.Work.ImageURL,
-			Description: arg.Work.Description,
-			IsPublic:    arg.Work.IsPublic,
-			CreatedAt:   fmt.Sprint(createdAt),
+			ID:               id,
+			UserID:           arg.Work.UserID,
+			Title:            arg.Work.Title,
+			Tags:             arg.Work.Tags,
+			ImageURL:         arg.Work.ImageURL,
+			Description:      arg.Work.Description,
+			IsPublic:         arg.Work.IsPublic,
+			CreatedAt:        fmt.Sprint(createdAt),
+			FavoriteUserList: arg.Work.FavoriteUserList,
 		},
 	); err != nil {
 		fmt.Println("Got error calling CreateWorkHandle:")
@@ -77,14 +79,15 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 	}
 
 	result := Work{
-		ID:          id,
-		UserID:      arg.Work.UserID,
-		Title:       arg.Work.Title,
-		Tags:        arg.Work.Tags,
-		ImageURL:    arg.Work.ImageURL,
-		Description: arg.Work.Description,
-		IsPublic:    arg.Work.IsPublic,
-		CreatedAt:   int(createdAt),
+		ID:               id,
+		UserID:           arg.Work.UserID,
+		Title:            arg.Work.Title,
+		Tags:             arg.Work.Tags,
+		ImageURL:         arg.Work.ImageURL,
+		Description:      arg.Work.Description,
+		IsPublic:         arg.Work.IsPublic,
+		CreatedAt:        int(createdAt),
+		FavoriteUserList: arg.Work.FavoriteUserList,
 	}
 
 	// Add or Inclement popular tags

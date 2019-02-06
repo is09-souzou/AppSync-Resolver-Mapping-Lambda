@@ -43,14 +43,15 @@ func ReadWorkHandle(arg ReadWork, identity types.Identity) (Work, error) {
 	}
 
 	result := Work{
-		ID:          work.ID,
-		UserID:      work.UserID,
-		Title:       work.Title,
-		Tags:        work.Tags,
-		ImageURL:    work.ImageURL,
-		Description: work.Description,
-		IsPublic:    work.IsPublic,
-		CreatedAt:   wrokCreatedAt,
+		ID:               work.ID,
+		UserID:           work.UserID,
+		Title:            work.Title,
+		Tags:             work.Tags,
+		ImageURL:         work.ImageURL,
+		Description:      work.Description,
+		IsPublic:         work.IsPublic,
+		CreatedAt:        wrokCreatedAt,
+		FavoriteUserList: work.FavoriteUserList,
 	}
 
 	return result, nil

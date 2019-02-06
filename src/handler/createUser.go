@@ -9,12 +9,13 @@ import (
 
 // UserCreateBase UserCreate user struct
 type UserCreateBase struct {
-	Email       *string  `json:"email"`
-	DisplayName string   `json:"displayName"`
-	Career      *string  `json:"career"`
-	AvatarURI   *string  `json:"avatarUri"`
-	Message     *string  `json:"message"`
-	SkillList   []string `json:"skillList"`
+	Email            *string   `json:"email"`
+	DisplayName      string    `json:"displayName"`
+	Career           *string   `json:"career"`
+	AvatarURI        *string   `json:"avatarUri"`
+	Message          *string   `json:"message"`
+	SkillList        []string  `json:"skillList"`
+	FavoriteWorkList *[]string `json:"favoriteWorkList"`
 }
 
 // UserCreate create user struct
@@ -34,13 +35,14 @@ func CreateUserHandle(arg UserCreate, identity types.Identity) (User, error) {
 	err = model.CreateUser(
 		svc,
 		model.UserCreate{
-			ID:          identity.Sub,
-			Email:       arg.User.Email,
-			DisplayName: arg.User.DisplayName,
-			Career:      arg.User.Career,
-			AvatarURI:   arg.User.AvatarURI,
-			Message:     arg.User.Message,
-			SkillList:   arg.User.SkillList,
+			ID:               identity.Sub,
+			Email:            arg.User.Email,
+			DisplayName:      arg.User.DisplayName,
+			Career:           arg.User.Career,
+			AvatarURI:        arg.User.AvatarURI,
+			Message:          arg.User.Message,
+			SkillList:        arg.User.SkillList,
+			FavoriteWorkList: arg.User.FavoriteWorkList,
 		},
 	)
 
@@ -51,13 +53,14 @@ func CreateUserHandle(arg UserCreate, identity types.Identity) (User, error) {
 	}
 
 	result := User{
-		ID:          identity.Sub,
-		Email:       arg.User.Email,
-		DisplayName: arg.User.DisplayName,
-		Career:      arg.User.Career,
-		AvatarURI:   arg.User.AvatarURI,
-		Message:     arg.User.Message,
-		SkillList:   arg.User.SkillList,
+		ID:               identity.Sub,
+		Email:            arg.User.Email,
+		DisplayName:      arg.User.DisplayName,
+		Career:           arg.User.Career,
+		AvatarURI:        arg.User.AvatarURI,
+		Message:          arg.User.Message,
+		SkillList:        arg.User.SkillList,
+		FavoriteWorkList: arg.User.FavoriteWorkList,
 	}
 
 	return result, nil

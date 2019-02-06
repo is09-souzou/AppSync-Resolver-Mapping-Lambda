@@ -11,13 +11,14 @@ import (
 
 // WorkUpdateBase WorkUpdate work struct
 type WorkUpdateBase struct {
-	ID          string    `json:"id"`
-	UserID      *string   `json:"userId"`
-	Title       *string   `json:"title"`
-	Tags        *[]string `json:"tags"`
-	ImageURL    *string   `json:"imageUrl"`
-	IsPublic    *bool     `json:"isPublic"`
-	Description *string   `json:"description"`
+	ID               string    `json:"id"`
+	UserID           *string   `json:"userId"`
+	Title            *string   `json:"title"`
+	Tags             *[]string `json:"tags"`
+	ImageURL         *string   `json:"imageUrl"`
+	IsPublic         *bool     `json:"isPublic"`
+	Description      *string   `json:"description"`
+	FavoriteUserList *[]string `json:"favoriteUserList"`
 }
 
 // WorkUpdate update work struct
@@ -50,13 +51,14 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 	newWork, err := model.UpdateWorkByID(
 		svc,
 		model.WorkUpdate{
-			ID:          arg.Work.ID,
-			UserID:      nil,
-			Title:       arg.Work.Title,
-			Tags:        arg.Work.Tags,
-			ImageURL:    arg.Work.ImageURL,
-			IsPublic:    arg.Work.IsPublic,
-			Description: arg.Work.Description,
+			ID:               arg.Work.ID,
+			UserID:           nil,
+			Title:            arg.Work.Title,
+			Tags:             arg.Work.Tags,
+			ImageURL:         arg.Work.ImageURL,
+			IsPublic:         arg.Work.IsPublic,
+			Description:      arg.Work.Description,
+			FavoriteUserList: arg.Work.FavoriteUserList,
 		},
 	)
 
@@ -98,14 +100,15 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 	}
 
 	result := Work{
-		ID:          newWork.ID,
-		UserID:      newWork.UserID,
-		Title:       newWork.Title,
-		Tags:        newWork.Tags,
-		ImageURL:    newWork.ImageURL,
-		Description: newWork.Description,
-		IsPublic:    newWork.IsPublic,
-		CreatedAt:   newWrokCreatedAt,
+		ID:               newWork.ID,
+		UserID:           newWork.UserID,
+		Title:            newWork.Title,
+		Tags:             newWork.Tags,
+		ImageURL:         newWork.ImageURL,
+		Description:      newWork.Description,
+		IsPublic:         newWork.IsPublic,
+		CreatedAt:        newWrokCreatedAt,
+		FavoriteUserList: newWork.FavoriteUserList,
 	}
 
 	// Add or Inclement popular tags of newWork

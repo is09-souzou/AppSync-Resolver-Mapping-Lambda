@@ -51,6 +51,7 @@ func UserConnectionHandle(arg UserConnectionArg, identity types.Identity) (UserC
 		item.SkillList = i.SkillList
 		createdAt, _ := strconv.Atoi(i.CreatedAt)
 		item.CreatedAt = createdAt
+		item.FavoriteWorkList = i.FavoriteWorkList
 
 		items = append(items, item)
 	}

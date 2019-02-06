@@ -23,74 +23,80 @@ func GetSVC() (*dynamodb.DynamoDB, error) {
 
 // User DynamoDB Resut User Struct
 type User struct {
-	ID          string
-	Email       *string
-	DisplayName string
-	Career      *string
-	AvatarURI   *string
-	Message     *string
-	SkillList   []string
-	CreatedAt   string
+	ID               string
+	Email            *string
+	DisplayName      string
+	Career           *string
+	AvatarURI        *string
+	Message          *string
+	SkillList        []string
+	CreatedAt        string
+	FavoriteWorkList *[]string
 }
 
 // UserCreate DynamoDB Create User Struct
 type UserCreate struct {
-	ID          string
-	Email       *string
-	DisplayName string
-	Career      *string
-	AvatarURI   *string
-	Message     *string
-	SkillList   []string
-	CreatedAt   string
+	ID               string
+	Email            *string
+	DisplayName      string
+	Career           *string
+	AvatarURI        *string
+	Message          *string
+	SkillList        []string
+	CreatedAt        string
+	FavoriteWorkList *[]string
 }
 
 // UserUpdate DynamoDB Update User Struct
 type UserUpdate struct {
-	ID          string
-	Email       *string
-	DisplayName *string
-	Career      *string
-	AvatarURI   *string
-	Message     *string
-	SkillList   *[]string
-	CreatedAt   *string
+	ID               string
+	Email            *string
+	DisplayName      *string
+	Career           *string
+	AvatarURI        *string
+	Message          *string
+	SkillList        *[]string
+	CreatedAt        *string
+	FavoriteWorkList *[]string
 }
 
 // Work DynamoDB Result Work Struct
 type Work struct {
-	ID          string
-	UserID      string
-	Title       string
-	Tags        *[]string
-	ImageURL    *string
-	Description string
-	IsPublic    bool
-	CreatedAt   string
+	ID               string
+	UserID           string
+	Title            string
+	Tags             *[]string
+	ImageURL         *string
+	Description      string
+	IsPublic         bool
+	CreatedAt        string
+	FavoriteUserList *[]string
 }
 
 // WorkCreate DynamoDB Create Work Struct
 type WorkCreate struct {
-	ID          string
-	UserID      string
-	Title       string
-	Tags        *[]string
-	ImageURL    *string
-	Description string
-	IsPublic    bool
-	CreatedAt   string
+	ID               string
+	UserID           string
+	Title            string
+	Tags             *[]string
+	ImageURL         *string
+	Description      string
+	IsPublic         bool
+	CreatedAt        string
+	FavoriteUserList *[]string
 }
 
 // WorkUpdate DynamoDB Update Work Struct
 type WorkUpdate struct {
-	ID          string
-	UserID      *string
-	Title       *string
-	Tags        *[]string
-	ImageURL    *string
-	Description *string
-	IsPublic    *bool
-	CreatedAt   *string
+	ID               string
+	UserID           *string
+	Title            *string
+	Tags             *[]string
+	ImageURL         *string
+	Description      *string
+	IsPublic         *bool
+	CreatedAt        *string
+	FavoriteUserList *[]string
 }
 
 // PopularTag DynamoDB Result PopularTag Struct

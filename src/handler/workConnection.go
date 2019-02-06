@@ -56,6 +56,7 @@ func WorkConnectionHandle(arg WorkConnectionArg, identity types.Identity) (WorkC
 		item.Description = i.Description
 		createdAt, _ := strconv.Atoi(i.CreatedAt)
 		item.CreatedAt = createdAt
+		item.FavoriteUserList = i.FavoriteUserList
 
 		items = append(items, item)
 	}

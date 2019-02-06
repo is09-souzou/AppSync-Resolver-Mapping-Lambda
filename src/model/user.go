@@ -65,6 +65,10 @@ func CreateUser(svc *dynamodb.DynamoDB, user UserCreate) error {
 		item["skillList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(user.SkillList)}
 	}
 
+	if user.FavoriteWorkList != nil && len(*user.FavoriteWorkList) != 0 {
+		item["favoriteWorkList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*user.FavoriteWorkList)}
+	}
+
 	input := &dynamodb.PutItemInput{
 		Item:      item,
 		TableName: aws.String(UserTableName),
@@ -249,6 +253,11 @@ func UpdateUserByID(svc *dynamodb.DynamoDB, user UserUpdate) (User, error) {
 	if user.SkillList != nil && len(*user.SkillList) != 0 {
 		expressionAttributeValues[":skillList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*user.SkillList)}
 		updateExpression += "skillList = :skillList, "
+	}
+
+	if user.FavoriteWorkList != nil && len(*user.FavoriteWorkList) != 0 {
+		expressionAttributeValues[":FavoriteWorkList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*user.FavoriteWorkList)}
+		updateExpression += "FavoriteWorkList = :FavoriteWorkList, "
 	}
 
 	input := &dynamodb.UpdateItemInput{

@@ -74,6 +74,10 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 		item["imageUrl"] = &dynamodb.AttributeValue{S: aws.String(*work.ImageURL)}
 	}
 
+	if work.FavoriteUserList != nil && len(*work.FavoriteUserList) != 0 {
+		item["favoriteUserList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.FavoriteUserList)}
+	}
+
 	input := &dynamodb.PutItemInput{
 		Item:      item,
 		TableName: aws.String(WorkTableName),
@@ -480,6 +484,11 @@ func UpdateWorkByID(svc *dynamodb.DynamoDB, work WorkUpdate) (Work, error) {
 		}
 		expressionAttributeValues[":createdAt"] = &dynamodb.AttributeValue{N: aws.String(string(*work.CreatedAt))}
 		updateExpression += "createdAt = :createdAt, "
+	}
+
+	if work.FavoriteUserList != nil && len(*work.FavoriteUserList) != 0 {
+		expressionAttributeValues[":FavoriteUserList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.FavoriteUserList)}
+		updateExpression += "FavoriteUserList = :FavoriteUserList, "
 	}
 
 	input := &dynamodb.UpdateItemInput{
