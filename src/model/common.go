@@ -44,7 +44,6 @@ type UserCreate struct {
 	Message          *string
 	SkillList        []string
 	CreatedAt        string
-	FavoriteWorkList *[]string
 }
 
 // UserUpdate DynamoDB Update User Struct
@@ -83,7 +82,6 @@ type WorkCreate struct {
 	Description      string
 	IsPublic         bool
 	CreatedAt        string
-	FavoriteUserList *[]string
 }
 
 // WorkUpdate DynamoDB Update Work Struct

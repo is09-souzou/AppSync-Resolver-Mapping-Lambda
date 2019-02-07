@@ -15,7 +15,6 @@ type UserCreateBase struct {
 	AvatarURI        *string   `json:"avatarUri"`
 	Message          *string   `json:"message"`
 	SkillList        []string  `json:"skillList"`
-	FavoriteWorkList *[]string `json:"favoriteWorkList"`
 }
 
 // UserCreate create user struct
@@ -42,7 +41,6 @@ func CreateUserHandle(arg UserCreate, identity types.Identity) (User, error) {
 			AvatarURI:        arg.User.AvatarURI,
 			Message:          arg.User.Message,
 			SkillList:        arg.User.SkillList,
-			FavoriteWorkList: arg.User.FavoriteWorkList,
 		},
 	)
 
@@ -60,7 +58,6 @@ func CreateUserHandle(arg UserCreate, identity types.Identity) (User, error) {
 		AvatarURI:        arg.User.AvatarURI,
 		Message:          arg.User.Message,
 		SkillList:        arg.User.SkillList,
-		FavoriteWorkList: arg.User.FavoriteWorkList,
 	}
 
 	return result, nil

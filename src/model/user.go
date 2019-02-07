@@ -65,10 +65,6 @@ func CreateUser(svc *dynamodb.DynamoDB, user UserCreate) error {
 		item["skillList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(user.SkillList)}
 	}
 
-	if user.FavoriteWorkList != nil && len(*user.FavoriteWorkList) != 0 {
-		item["favoriteWorkList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*user.FavoriteWorkList)}
-	}
-
 	input := &dynamodb.PutItemInput{
 		Item:      item,
 		TableName: aws.String(UserTableName),

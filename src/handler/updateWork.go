@@ -18,7 +18,6 @@ type WorkUpdateBase struct {
 	ImageURL         *string   `json:"imageUrl"`
 	IsPublic         *bool     `json:"isPublic"`
 	Description      *string   `json:"description"`
-	FavoriteUserList *[]string `json:"favoriteUserList"`
 }
 
 // WorkUpdate update work struct
@@ -58,7 +57,6 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 			ImageURL:         arg.Work.ImageURL,
 			IsPublic:         arg.Work.IsPublic,
 			Description:      arg.Work.Description,
-			FavoriteUserList: arg.Work.FavoriteUserList,
 		},
 	)
 
@@ -108,7 +106,6 @@ func UpdateWorkHandle(arg WorkUpdate, identity types.Identity) (Work, error) {
 		Description:      newWork.Description,
 		IsPublic:         newWork.IsPublic,
 		CreatedAt:        newWrokCreatedAt,
-		FavoriteUserList: newWork.FavoriteUserList,
 	}
 
 	// Add or Inclement popular tags of newWork

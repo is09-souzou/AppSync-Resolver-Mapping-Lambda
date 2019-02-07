@@ -74,10 +74,6 @@ func CreateWork(svc *dynamodb.DynamoDB, work WorkCreate) error {
 		item["imageUrl"] = &dynamodb.AttributeValue{S: aws.String(*work.ImageURL)}
 	}
 
-	if work.FavoriteUserList != nil && len(*work.FavoriteUserList) != 0 {
-		item["favoriteUserList"] = &dynamodb.AttributeValue{SS: aws.StringSlice(*work.FavoriteUserList)}
-	}
-
 	input := &dynamodb.PutItemInput{
 		Item:      item,
 		TableName: aws.String(WorkTableName),

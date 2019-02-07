@@ -51,7 +51,6 @@ func ReadWorkHandle(arg ReadWork, identity types.Identity) (Work, error) {
 		Description:      work.Description,
 		IsPublic:         work.IsPublic,
 		CreatedAt:        wrokCreatedAt,
-		FavoriteUserList: work.FavoriteUserList,
 	}
 
 	return result, nil

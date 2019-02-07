@@ -19,7 +19,6 @@ type WorkCreateBase struct {
 	ImageURL         *string   `json:"imageUrl"`
 	IsPublic         bool      `json:"isPublic"`
 	Description      string    `json:"description"`
-	FavoriteUserList *[]string `json:"favoriteUserList"`
 }
 
 // WorkCreate create work struct
@@ -70,7 +69,6 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 			Description:      arg.Work.Description,
 			IsPublic:         arg.Work.IsPublic,
 			CreatedAt:        fmt.Sprint(createdAt),
-			FavoriteUserList: arg.Work.FavoriteUserList,
 		},
 	); err != nil {
 		fmt.Println("Got error calling CreateWorkHandle:")
@@ -87,7 +85,6 @@ func CreateWorkHandle(arg WorkCreate, identity types.Identity) (Work, error) {
 		Description:      arg.Work.Description,
 		IsPublic:         arg.Work.IsPublic,
 		CreatedAt:        int(createdAt),
-		FavoriteUserList: arg.Work.FavoriteUserList,
 	}
 
 	// Add or Inclement popular tags

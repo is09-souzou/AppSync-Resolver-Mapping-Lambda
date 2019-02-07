@@ -17,7 +17,6 @@ type UserUpdateBase struct {
 	AvatarURI        *string   `json:"avatarUri"`
 	Message          *string   `json:"message"`
 	SkillList        *[]string `json:"skillList"`
-	FavoriteWorkList *[]string `json:"favoriteWorkList"`
 }
 
 // UserUpdate create user struct
@@ -49,7 +48,6 @@ func UpdateUserHandle(arg UserUpdate, identity types.Identity) (User, error) {
 			AvatarURI:        arg.User.AvatarURI,
 			Message:          arg.User.Message,
 			SkillList:        arg.User.SkillList,
-			FavoriteWorkList: arg.User.FavoriteWorkList,
 		},
 	)
 
@@ -67,7 +65,6 @@ func UpdateUserHandle(arg UserUpdate, identity types.Identity) (User, error) {
 		AvatarURI:        newUser.AvatarURI,
 		Message:          newUser.Message,
 		SkillList:        newUser.SkillList,
-		FavoriteWorkList: newUser.FavoriteWorkList,
 	}
 
 	return result, nil

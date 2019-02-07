@@ -62,7 +62,6 @@ func ListWorkHandle(arg ListWork, identity types.Identity) (WorkConnection, erro
 		item.Description = i.Description
 		createdAt, _ := strconv.Atoi(i.CreatedAt)
 		item.CreatedAt = createdAt
-		item.FavoriteUserList = i.FavoriteUserList
 
 		items = append(items, item)
 	}
